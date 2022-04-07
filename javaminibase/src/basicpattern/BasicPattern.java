@@ -3,6 +3,7 @@ package basicpattern;
 import static global.RDFSystemDefs.initRdfDB;
 
 import diskmgr.rdf.RdfDB;
+import global.AttrType;
 import global.Convert;
 import global.EID;
 import global.GlobalConst;
@@ -190,6 +191,67 @@ public class BasicPattern implements GlobalConst {
     System.arraycopy(data, basicPattern_offset, tuplecopy, 0, basicPattern_length);
     return tuplecopy;
   }
+
+
+  public Tuple getTuplefromBasicPattern()
+  {
+    Tuple tuple1 = new Tuple();
+    int length = (fldCnt);
+    AttrType[]	 types = new AttrType[(length-1)*2 +1];
+    int j = 0;
+    for(j = 0 ; j < (length-1)*2  ; j++)
+    {
+      types[j] = new AttrType(AttrType.attrInteger);
+    }
+    types[j] = new AttrType(AttrType.attrReal);
+    short[] s_sizes = new short[1];
+    s_sizes[0] = (short)((length-1)*2 * 4 + 1* 8);
+    try {
+      tuple1.setHdr((short)((length-1)*2 +1) , types, s_sizes);
+    } catch (InvalidTypeException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    } catch (InvalidTupleSizeException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    int i = 0;
+    j = 1;
+    for( i = 0 ; i < fldCnt-1 ; i++)
+    {
+      try {
+        EID eid = getEIDFld(i+1);
+        tuple1.setIntFld(j++, eid.getSlotNo());
+        tuple1.setIntFld(j++, eid.getPageNo().pid);
+      } catch (FieldNumberOutOfBoundException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    try {
+      tuple1.setDoubleFld(j,getDoubleFld(fldCnt));
+    } catch (FieldNumberOutOfBoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+	   /*	  	try {
+			tuple1.print(types);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+    return tuple1;
+  }
+
 
   /**
    * return the data byte array

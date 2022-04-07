@@ -324,6 +324,28 @@ public class Tuple implements GlobalConst {
         }
     }
 
+
+    /**
+     * Set this field to double value
+     *
+     * @param     fldNo   the field number
+     * @param     val     the double value
+     * @exception   IOException I/O errors
+     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
+     */
+
+    public Tuple setDoubleFld(int fldNo, double val)
+        throws IOException, FieldNumberOutOfBoundException
+    {
+        if ( (fldNo > 0) && (fldNo <= fldCnt))
+        {
+            Convert.setDoubleValue(val, fldOffset[fldNo -1], data);
+            return this;
+        }
+        else
+            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+    }
+
     /**
      * Set this field to String value
      *
