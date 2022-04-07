@@ -253,6 +253,38 @@ public class BasicPattern implements GlobalConst {
   }
 
 
+  public BasicPattern getBasicPatternfromTuple(Tuple atuple)
+      throws FieldNumberOutOfBoundException, IOException {
+
+    short length = (atuple.noOfFlds());
+
+    BasicPattern bp = new BasicPattern();
+    try {
+      bp.setHdr((short)((length)/2 + 1));
+    }  catch (InvalidTupleSizeException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    int i = 0;
+    int j = 0;
+    for(i = 0 , j = 1; i < (length/2)  ; i++)
+    {
+      int slotno = atuple.getIntFld(j++);
+      int pageno = atuple.getIntFld(j++);
+
+      LID lid = new LID(new PageId(pageno),slotno);
+      EID eid = lid.getEntityID();
+      bp.setEIDFld(i+1, eid);
+
+    }
+    double minConfidence = atuple.getDoubleFld(j);
+    bp.setDoubleFld(i+1, minConfidence);
+    return bp;
+
+  }
+
+
   /**
    * return the data byte array
    *
