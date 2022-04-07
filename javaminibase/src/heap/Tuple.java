@@ -449,6 +449,11 @@ public class Tuple implements GlobalConst {
                 case AttrType.attrReal:
                     incr = 4;
                     break;
+
+                case AttrType.attrDouble:
+                    incr = 8;
+                    break;
+
                 case AttrType.attrBytes:
                     incr = strSizes[strCount];
                     strCount++;
@@ -474,6 +479,10 @@ public class Tuple implements GlobalConst {
 
             case AttrType.attrReal:
                 incr = 4;
+                break;
+
+            case AttrType.attrDouble:
+                incr =8;
                 break;
 
             case AttrType.attrBytes:
@@ -534,6 +543,7 @@ public class Tuple implements GlobalConst {
         int i, val;
         float fval;
         String sval;
+        double dval;
         byte[] buff;
 
         System.out.print("[");
@@ -548,6 +558,11 @@ public class Tuple implements GlobalConst {
                 case AttrType.attrReal:
                     fval = Convert.getFloValue(fldOffset[i], data);
                     System.out.print(fval);
+                    break;
+
+                case AttrType.attrDouble:
+                    dval = Convert.getDoubleValue(fldOffset[i], data);
+                    System.out.print(dval);
                     break;
 
                 case AttrType.attrString:

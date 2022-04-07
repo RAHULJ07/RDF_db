@@ -203,7 +203,7 @@ public class BasicPattern implements GlobalConst {
     {
       types[j] = new AttrType(AttrType.attrInteger);
     }
-    types[j] = new AttrType(AttrType.attrReal);
+    types[j] = new AttrType(AttrType.attrDouble);
     short[] s_sizes = new short[1];
     s_sizes[0] = (short)((length-1)*2 * 4 + 1* 8);
     try {
@@ -563,13 +563,6 @@ public class BasicPattern implements GlobalConst {
     }
     return found;
   }
-
-
-
-
-
-
-
 
 
 }
