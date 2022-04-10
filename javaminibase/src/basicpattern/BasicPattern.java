@@ -223,10 +223,21 @@ public class BasicPattern implements GlobalConst {
   }
 
 
-  public BasicPattern getBasicPatternfromTuple(Tuple atuple)
-      throws FieldNumberOutOfBoundException, IOException {
+  public BasicPattern getBasicPatternfromTuple(Tuple tuple)
+      throws FieldNumberOutOfBoundException, IOException, InvalidTupleSizeException, InvalidTypeException {
 
-    short length = (atuple.noOfFlds());
+    short length = (tuple.noOfFlds());
+
+    AttrType[] types = new AttrType[(length - 1) * 2 + 1];
+    int j = 0;
+    for (j = 0; j < (length - 1) * 2; j++) {
+      types[j] = new AttrType(AttrType.attrInteger);
+    }
+    types[j] = new AttrType(AttrType.attrDouble);
+    short[] s_sizes = new short[1];
+    s_sizes[0] = (short) ((length - 1) * 2 * 4 + 1 * 8);
+
+    tuple.setHdr(length, types, s_sizes);
 
     BasicPattern bp = new BasicPattern();
     try {
@@ -237,17 +248,17 @@ public class BasicPattern implements GlobalConst {
       e.printStackTrace();
     }
     int i = 0;
-    int j = 0;
+    j = 0;
     for (i = 0, j = 1; i < (length / 2); i++) {
-      int slotno = atuple.getIntFld(j++);
-      int pageno = atuple.getIntFld(j++);
+      int slotno = tuple.getIntFld(j++);
+      int pageno = tuple.getIntFld(j++);
 
       LID lid = new LID(new PageId(pageno), slotno);
       EID eid = lid.getEntityID();
       bp.setEIDField(i + 1, eid);
 
     }
-    double minConfidence = atuple.getDoubleFld(j);
+    double minConfidence = tuple.getDoubleFld(j);
     bp.setDoubleFld(i + 1, minConfidence);
     return bp;
 
