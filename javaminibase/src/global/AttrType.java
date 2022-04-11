@@ -11,6 +11,7 @@ public class AttrType {
   public static final int attrReal = 2;
   public static final int attrSymbol = 3;
   public static final int attrNull = 4;
+  public static final int attrDouble  = 6;
   /**
    * We need  attrBytes to store the Entity
    * structure in the heap files.
