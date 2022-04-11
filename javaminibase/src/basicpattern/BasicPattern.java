@@ -9,7 +9,6 @@ import global.EID;
 import global.GlobalConst;
 import global.LID;
 import global.PageId;
-import global.RDFSystemDefs;
 import global.SystemDefs;
 import heap.FieldNumberOutOfBoundException;
 import heap.HFBufMgrException;
@@ -27,84 +26,87 @@ import java.io.IOException;
 public class BasicPattern implements GlobalConst {
 
   /**
-   * Maximum size of any BasicPattern
+   * The Maximum size of this BasicPattern
    */
   public static final int maxSize = MINIBASE_PAGESIZE;
-  public static RDFSystemDefs sysdef = null;
+
   /**
-   * a byte array to hold data
+   * To hold data.
    */
   private byte[] data;
+
   /**
-   * start position of this BasicPattern in data[]
+   * The start position of the BasicPattern in data[]
    */
   private int basicPatternOffset;
+
   /**
-   * length of this BasicPattern
+   * The length of this BasicPattern
    */
   private int basicPatternLength;
+
   /**
-   * private field Number of fields in this BasicPattern
+   * Number of fields in this BasicPattern
    */
   private short fieldCount;
-  /**
-   * private field Array of offsets of the fields
-   */
 
+  /**
+   * field Array of offsets of the fields in data[]
+   */
   private short[] fieldOffset;
 
   /**
-   * Class constructor Creat a new BasicPattern with length = max_size,tuple offset = 0.
+   * Class constructor Create a new BasicPattern with length as max_size and BasicPattern offset =
+   * 0.
    */
   public BasicPattern() {
-    // Creat a new BasicPattern
     data = new byte[maxSize];
     basicPatternOffset = 0;
     basicPatternLength = maxSize;
   }
 
   /**
-   * BasicPattern Constructor
+   * Class Constructor create a BasicPattern as per given parameters of bytearray of BP, Offset and
+   * length
    *
-   * @param abasicpattern a byte array which contains the basicpattern
-   * @param offset        the offset of the basicpattern in the byte array
-   * @param length        the length of the basicpattern
+   * @param aBasicPattern byte array that contains BasicPattern
+   * @param offset        offset of  BasicPattern in the byte array
+   * @param length        length of the BasicPattern
    */
-  public BasicPattern(byte[] abasicpattern, int offset, int length) {
-    data = abasicpattern;
+  public BasicPattern(byte[] aBasicPattern, int offset, int length) {
+    data = aBasicPattern;
     basicPatternOffset = offset;
     basicPatternLength = length;
   }
 
   /**
-   * Constructor(used as BasicPattern copy)
+   * Copy Constructor that copies from other BasicPattern
    *
-   * @param fromBasicPattern a byte array which contains the BasicPattern
+   * @param fromBasicPattern basicPattern from which new basicPattern to be created
    */
   public BasicPattern(BasicPattern fromBasicPattern) {
     data = fromBasicPattern.getBasicPatternByteArray();
     basicPatternLength = fromBasicPattern.getLength();
     basicPatternOffset = 0;
-    fieldCount = fromBasicPattern.numberOfFlds();
+    fieldCount = fromBasicPattern.numberOfFields();
     fieldOffset = fromBasicPattern.copyFieldOffset();
   }
 
   /**
-   * Class constructor Creat a new BasicPattern with length = size,BasicPattern offset = 0.
+   * The Class constructor to Creat a new BasicPattern with length as given size,BasicPattern offset
+   * as 0.
    */
-
   public BasicPattern(int size) {
-    // Creat a new BasicPattern
     data = new byte[size];
     basicPatternOffset = 0;
     basicPatternLength = size;
   }
 
   /**
-   * Copy a BasicPattern to the current BasicPattern position you must make sure the BasicPattern
-   * lengths must be equal
+   * To Copy a BasicPattern to the current BasicPattern position, fromBasicPattern should have the
+   * same length as this BP
    *
-   * @param fromBasicPattern the BasicPattern being copied
+   * @param fromBasicPattern BasicPattern that to be copied
    */
   public void basicPatternCopy(BasicPattern fromBasicPattern) {
     byte[] temparray = fromBasicPattern.getBasicPatternByteArray();
@@ -112,24 +114,24 @@ public class BasicPattern implements GlobalConst {
   }
 
   /**
-   * This is used when you don't want to use the constructor
+   * To use this instead of the constructer
    *
-   * @param abasicpattern a byte array which contains the BasicPattern
-   * @param offset        the offset of the BasicPattern in the byte array
-   * @param length        the length of the BasicPattern
+   * @param aBasicPattern a byte array that contains the BasicPattern
+   * @param offset        offset of the BasicPattern in the byte array
+   * @param length        length of the BasicPattern
    */
 
-  public void basicPatternInit(byte[] abasicpattern, int offset, int length) {
-    data = abasicpattern;
+  public void basicPatternInit(byte[] aBasicPattern, int offset, int length) {
+    data = aBasicPattern;
     basicPatternOffset = offset;
     basicPatternLength = length;
   }
 
   /**
-   * Set a BasicPattern with the given BasicPattern length and offset
+   * To Set BasicPattern with the given BasicPattern length and offset
    *
    * @param record a byte array contains the BasicPattern
-   * @param offset the offset of the BasicPattern ( =0 by default)
+   * @param offset the offset of the BasicPattern (  0 by default)
    * @param length the length of the BasicPattern
    */
   public void basicPatternSet(byte[] record, int offset, int length) {
@@ -139,16 +141,16 @@ public class BasicPattern implements GlobalConst {
   }
 
   /**
-   * get the length of a BasicPattern, call this method if you did not call setHdr () before
+   * To get the length of a BasicPattern, call this method if you did not call setHeader () before
    *
-   * @return length of this BasicPattern in bytes
+   * @return basicPatternLength of this BasicPattern in bytes
    */
   public int getLength() {
     return basicPatternLength;
   }
 
   /**
-   * get the length of a BasicPattern, call this method if you did call setHdr () before
+   * To get the length of a BasicPattern, call this method if you did call setHeader () before
    *
    * @return size of this BasicPattern in bytes
    */
@@ -156,8 +158,9 @@ public class BasicPattern implements GlobalConst {
     return ((short) (fieldOffset[fieldCount] - basicPatternOffset));
   }
 
+
   /**
-   * get the offset of a BasicPattern
+   * To get the offset of a BasicPattern
    *
    * @return offset of the BasicPattern in byte array
    */
@@ -165,45 +168,56 @@ public class BasicPattern implements GlobalConst {
     return basicPatternOffset;
   }
 
-  /**
-   * Copy the BasicPattern byte array out
-   *
-   * @return byte[], a byte array contains the BasicPattern the length of byte[] = length of the
-   * BasicPattern
-   */
 
+  /**
+   * To Copy the BasicPattern byte array
+   *
+   * @return byte[], a byte array contains the BasicPattern, the length of byte array is length of
+   * the BasicPattern
+   */
   public byte[] getBasicPatternByteArray() {
-    byte[] tupleCopy = new byte[basicPatternLength];
-    System.arraycopy(data, basicPatternOffset, tupleCopy, 0, basicPatternLength);
-    return tupleCopy;
+    byte[] BasicPatternCopy = new byte[basicPatternLength];
+    System.arraycopy(data, basicPatternOffset, BasicPatternCopy, 0, basicPatternLength);
+    return BasicPatternCopy;
   }
 
+  /**
+   * To get the tuple from Basic pattern
+   *
+   * @return the tuple extracted from Basic Pattern
+   */
+  public Tuple getTupleFromBasicPattern() {
 
-  public Tuple getTuplefromBasicPattern() {
     Tuple tuple = new Tuple();
-    int length = (fieldCount);
-    AttrType[] types = new AttrType[(length - 1) * 2 + 1];
+    int lengthOfTuple = fieldCount;
+
+    AttrType[] attrTypes = new AttrType[(lengthOfTuple - 1) * 2 + 1];
     int j = 0;
-    for (j = 0; j < (length - 1) * 2; j++) {
-      types[j] = new AttrType(AttrType.attrInteger);
+
+    for (j = 0; j < (lengthOfTuple - 1) * 2; j++) {
+      attrTypes[j] = new AttrType(AttrType.attrInteger);
     }
-    types[j] = new AttrType(AttrType.attrDouble);
-    short[] s_sizes = new short[1];
-    s_sizes[0] = (short) ((length - 1) * 2 * 4 + 1 * 8);
+    attrTypes[j] = new AttrType(AttrType.attrDouble);
+    short[] size = new short[1];
+
+    size[0] = (short) ((lengthOfTuple - 1) * 2 * 4 + 1 * 8);
+
     try {
-      tuple.setHdr((short) ((length - 1) * 2 + 1), types, s_sizes);
-    } catch (InvalidTypeException e1) {
-      e1.printStackTrace();
-    } catch (InvalidTupleSizeException e1) {
-      e1.printStackTrace();
+      tuple.setHdr((short) ((lengthOfTuple - 1) * 2 + 1), attrTypes, size);
+    } catch (InvalidTypeException invalidTypeException) {
+      invalidTypeException.printStackTrace();
+    } catch (InvalidTupleSizeException invalidTupleSizeException) {
+      invalidTupleSizeException.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
+
     int i = 0;
     j = 1;
+
     for (i = 0; i < fieldCount - 1; i++) {
       try {
-        EID eid = getEIDField(i + 1);
+        EID eid = getEIDFieldFromBP(i + 1);
         tuple.setIntFld(j++, eid.getSlotNo());
         tuple.setIntFld(j++, eid.getPageNo().pid);
       } catch (FieldNumberOutOfBoundException e) {
@@ -212,8 +226,9 @@ public class BasicPattern implements GlobalConst {
         e.printStackTrace();
       }
     }
+
     try {
-      tuple.setDoubleFld(j, getDoubleFld(fieldCount));
+      tuple.setDoubleFld(j, getDoubleField(fieldCount));
     } catch (FieldNumberOutOfBoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -222,211 +237,218 @@ public class BasicPattern implements GlobalConst {
     return tuple;
   }
 
-
+  /**
+   * To get the BasicPattern from the given tuple
+   *
+   * @param tuple tuple from which, BasicPattern needs to extracted
+   * @return
+   * @throws FieldNumberOutOfBoundException FieldNumber out of bound exception
+   * @throws IOException                    IO Exception
+   * @throws InvalidTupleSizeException      Invalid Tuple Size Exception
+   * @throws InvalidTypeException           Invalid Type Exception
+   */
   public BasicPattern getBasicPatternfromTuple(Tuple tuple)
       throws FieldNumberOutOfBoundException, IOException, InvalidTupleSizeException, InvalidTypeException {
 
-    short length = (tuple.noOfFlds());
+    short lengthOfTuple = tuple.noOfFlds();
+    AttrType[] attrTypes = new AttrType[(lengthOfTuple - 1) * 2 + 1];
 
-    AttrType[] types = new AttrType[(length - 1) * 2 + 1];
     int j = 0;
-    for (j = 0; j < (length - 1) * 2; j++) {
-      types[j] = new AttrType(AttrType.attrInteger);
+    for (j = 0; j < (lengthOfTuple - 1) * 2; j++) {
+      attrTypes[j] = new AttrType(AttrType.attrInteger);
     }
-    types[j] = new AttrType(AttrType.attrDouble);
-    short[] s_sizes = new short[1];
-    s_sizes[0] = (short) ((length - 1) * 2 * 4 + 1 * 8);
 
-    tuple.setHdr(length, types, s_sizes);
+    attrTypes[j] = new AttrType(AttrType.attrDouble);
+    short[] sizes = new short[1];
 
-    BasicPattern bp = new BasicPattern();
+    sizes[0] = (short) ((lengthOfTuple - 1) * 2 * 4 + 1 * 8);
+
+    tuple.setHdr(lengthOfTuple, attrTypes, sizes);
+    BasicPattern basicPattern = new BasicPattern();
+
     try {
-      bp.setHdr((short) ((length) / 2 + 1));
+      basicPattern.setHeader((short) ((lengthOfTuple) / 2 + 1));
     } catch (InvalidTupleSizeException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
+
     int i = 0;
     j = 0;
-    for (i = 0, j = 1; i < (length / 2); i++) {
-      int slotno = tuple.getIntFld(j++);
-      int pageno = tuple.getIntFld(j++);
 
-      LID lid = new LID(new PageId(pageno), slotno);
+    for (i = 0, j = 1; i < (lengthOfTuple / 2); i++) {
+      int slotNo = tuple.getIntFld(j++);
+      int pageNo = tuple.getIntFld(j++);
+
+      LID lid = new LID(new PageId(pageNo), slotNo);
       EID eid = lid.getEntityID();
-      bp.setEIDField(i + 1, eid);
+      basicPattern.setEIDField(i + 1, eid);
 
     }
-    double minConfidence = tuple.getDoubleFld(j);
-    bp.setDoubleFld(i + 1, minConfidence);
-    return bp;
+    double minimumConfidence = tuple.getDoubleFld(j);
+    basicPattern.setDoubleField(i + 1, minimumConfidence);
+    return basicPattern;
 
   }
 
-
   /**
-   * return the data byte array
+   * To return the data byte array
    *
-   * @return data byte array
+   * @return data as byte array
    */
-
   public byte[] returnBasicPatternByteArray() {
     return data;
   }
 
   /**
-   * Get pageno and slotno and Convert this field into EID
+   * To Convert pageNo and slotNo field into EID and return it
    *
-   * @throws IOException                    I/O errors
+   * @param fieldNo the field number
+   * @return the converted eid
+   * @throws IOException                    IO Exception
    * @throws FieldNumberOutOfBoundException BasicPattern field number out of bound
-   * @param  fieldNo  the field number
-   * @return the converted eid if success
    */
-
-  public EID getEIDField(int fieldNo)
+  public EID getEIDFieldFromBP(int fieldNo)
       throws IOException, FieldNumberOutOfBoundException {
-    int pageno, slotno;
+    int pageNo, slotNo;
     if ((fieldNo > 0) && (fieldNo <= fieldCount)) {
-      pageno = Convert.getIntValue(fieldOffset[fieldNo - 1], data);
-      slotno = Convert.getIntValue(fieldOffset[fieldNo - 1] + 4, data);
+      pageNo = Convert.getIntValue(fieldOffset[fieldNo - 1], data);
+      slotNo = Convert.getIntValue(fieldOffset[fieldNo - 1] + 4, data);
       PageId page = new PageId();
-      page.pid = pageno;
-      LID lid = new LID(page, slotno);
+      page.pid = pageNo;
+      LID lid = new LID(page, slotNo);
       EID eid = new EID(lid);
       return eid;
     } else {
-      throw new FieldNumberOutOfBoundException(null, "BP:BASICPATTERN_FIELDNO_OUT_OF_BOUND");
+      throw new FieldNumberOutOfBoundException(null,
+          "BasicPattern:BASICPATTERN_FIELDNO_OUT_OF_BOUND");
     }
   }
 
 
   /**
-   * Convert this field in to double
+   * To Convert the given field to double
    *
-   * @param fieldNo the field number
-   * @return the converted double number  if success
-   * @throws IOException                    I/O errors
-   * @throws FieldNumberOutOfBoundException BasicPattern field number out of bound
+   * @param fieldNo given field number
+   * @return
+   * @throws IOException                    IO Exception
+   * @throws FieldNumberOutOfBoundException BasicPattern field number out of bound Exception
    */
-
-  public double getDoubleFld(int fieldNo)
+  public double getDoubleField(int fieldNo)
       throws IOException, FieldNumberOutOfBoundException {
-    double val;
-    if ((fieldNo > 0) && (fieldNo <= fieldCount)) {
-      val = Convert.getDoubleValue(fieldOffset[fieldNo - 1], data);
-      return val;
+    double doubleValue;
+    if ((fieldNo <= fieldCount) && (fieldNo > 0)) {
+      doubleValue = Convert.getDoubleValue(fieldOffset[fieldNo - 1], data);
+      return doubleValue;
     } else {
-      throw new FieldNumberOutOfBoundException(null, "TUPLE:BASICPATTERN_FLDNO_OUT_OF_BOUND");
+      throw new FieldNumberOutOfBoundException(null,
+          "BASICPATTERN:BASICPATTERN_FLDNO_OUT_OF_BOUND");
     }
   }
 
   /**
-   * Set this field to EID value
+   * To Set the given field to EID value
    *
+   * @param fieldNo given field number
+   * @param eid     given EID
    * @throws IOException                    I/O errors
-   * @throws FieldNumberOutOfBoundException BasicPattern field number out of bound
-   * @param  fieldNo  the field number
-   * @param  val  the EID value
+   * @throws FieldNumberOutOfBoundException BasicPattern field number out of bound Error
    */
-
-  public BasicPattern setEIDField(int fieldNo, EID val)
+  public BasicPattern setEIDField(int fieldNo, EID eid)
       throws IOException, FieldNumberOutOfBoundException {
-    if ((fieldNo > 0) && (fieldNo <= fieldCount)) {
-      Convert.setIntValue(val.getPageNo().pid, fieldOffset[fieldNo - 1], data);
-      Convert.setIntValue(val.getSlotNo(), fieldOffset[fieldNo - 1] + 4, data);
-      return this;
-    } else {
-      throw new FieldNumberOutOfBoundException(null, "BP :BASIC_PATTERN_FLDNO_OUT_OF_BOUND");
-    }
-  }
-
-  /**
-   * Set this field to double value
-   *
-   * @param fieldNo the field number
-   * @param val     the double value
-   * @throws IOException                    I/O errors
-   * @throws FieldNumberOutOfBoundException BasicPattern field number out of bound
-   */
-
-  public BasicPattern setDoubleFld(int fieldNo, double val)
-      throws IOException, FieldNumberOutOfBoundException {
-    if ((fieldNo > 0) && (fieldNo <= fieldCount)) {
-      Convert.setDoubleValue(val, fieldOffset[fieldNo - 1], data);
+    if ((fieldNo <= fieldCount) && (fieldNo > 0)) {
+      Convert.setIntValue(eid.getPageNo().pid, fieldOffset[fieldNo - 1], data);
+      Convert.setIntValue(eid.getSlotNo(), fieldOffset[fieldNo - 1] + 4, data);
       return this;
     } else {
       throw new FieldNumberOutOfBoundException(null,
-          "BasicPattern:BASIC PATTERN_FLDNO_OUT_OF_BOUND");
+          "BASICPATTERN :BASIC_PATTERN_FLDNO_OUT_OF_BOUND");
+    }
+  }
+
+  /**
+   * To Set the given field to double value
+   *
+   * @param fieldNo     given field number
+   * @param doubleValue given double value
+   * @throws IOException                    IO exception
+   * @throws FieldNumberOutOfBoundException BasicPattern field number out of bound
+   */
+  public BasicPattern setDoubleField(int fieldNo, double doubleValue)
+      throws IOException, FieldNumberOutOfBoundException {
+    if ((fieldNo > 0) && (fieldNo <= fieldCount)) {
+      Convert.setDoubleValue(doubleValue, fieldOffset[fieldNo - 1], data);
+      return this;
+    } else {
+      throw new FieldNumberOutOfBoundException(null,
+          "BASICPATTERN:BASIC PATTERN_FLDNO_OUT_OF_BOUND");
     }
 
   }
 
   /**
-   * setHdr will set the header of this BasicPattern.
+   * setHeader  To set the header of this BasicPattern.
    *
-   * @throws IOException               I/O errors
-   * @throws InvalidTypeException      Invalid BasicPattern type
-   * @throws InvalidTupleSizeException BasicPattern size too big
-   * @param  numberOfFields   number of nodeIds + 1 (for confidence)
+   * @param numberOfFields number of nodes + 1 (+1 for confidence)
+   * @throws IOException               IO Exception
+   * @throws InvalidTypeException      Invalid BasicPattern type Error
+   * @throws InvalidTupleSizeException BasicPattern size too big Error
    */
 
-  public void setHdr(short numberOfFields) throws InvalidTupleSizeException, IOException {
+  public void setHeader(short numberOfFields) throws InvalidTupleSizeException, IOException {
     if ((numberOfFields + 2) * 2 > maxSize) {
-      throw new InvalidTupleSizeException(null, "BP: BASIC PATTERN_TOOBIG_ERROR");
+      throw new InvalidTupleSizeException(null, "BP: BASIC PATTERN_SIZE_ERROR");
     }
 
     fieldCount = numberOfFields;
     Convert.setShortValue(numberOfFields, basicPatternOffset, data);
     fieldOffset = new short[numberOfFields + 1];
-    int pos = basicPatternOffset + 2;  // start position for fldOffset[]
+    int position = basicPatternOffset + 2;
 
     fieldOffset[0] = (short) ((numberOfFields + 2) * 2 + basicPatternOffset);
 
-    Convert.setShortValue(fieldOffset[0], pos, data);
-    pos += 2;
-    short strCount = 0;
+    Convert.setShortValue(fieldOffset[0], position, data);
+    position += 2;
+    short stringCount = 0;
     short increment;
     int i;
 
     for (i = 1; i < numberOfFields; i++) {
       increment = 8;
       fieldOffset[i] = (short) (fieldOffset[i - 1] + increment);
-      Convert.setShortValue(fieldOffset[i], pos, data);
-      pos += 2;
+      Convert.setShortValue(fieldOffset[i], position, data);
+      position += 2;
 
     }
 
-    // For confidence
     increment = 8;
 
     fieldOffset[numberOfFields] = (short) (fieldOffset[i - 1] + increment);
-    Convert.setShortValue(fieldOffset[numberOfFields], pos, data);
+    Convert.setShortValue(fieldOffset[numberOfFields], position, data);
 
     basicPatternLength = fieldOffset[numberOfFields] - basicPatternOffset;
 
     if (basicPatternLength > maxSize) {
-      throw new InvalidTupleSizeException(null, "BP: BASIC PATTERN_TOOBIG_ERROR");
+      throw new InvalidTupleSizeException(null, "BASICPATTERN: BASIC PATTERN_SIZE_ERROR");
     }
   }
 
 
   /**
-   * Returns number of fields in this tuple
+   * Returns number of fields in this BasicPattern
    *
-   * @return the number of fields in this tuple
+   * @return the number of fields in this BasicPattern
    */
-
-  public short numberOfFlds() {
+  public short numberOfFields() {
     return fieldCount;
   }
 
   /**
-   * Makes a copy of the fldOffset array
+   * Makes a copy of the fieldOffset array
    *
-   * @return a copy of the fldOffset arrray
+   * @return a  new fieldOffset array that is copied from the existing fieldOffset
    */
-
   public short[] copyFieldOffset() {
     short[] newFieldOffset = new short[fieldCount + 1];
     for (int i = 0; i <= fieldCount; i++) {
@@ -441,18 +463,18 @@ public class BasicPattern implements GlobalConst {
    *
    * @Exception IOException I/O exception
    */
-  public void print()
+  public void printBasicPattern()
       throws IOException {
     initRdfDB();
-    LabelHeapFile Entity_HF = ((RdfDB) SystemDefs.JavabaseDB).getEntityHeapFile();
-    System.out.print("[");
+    LabelHeapFile entityHeapFile = ((RdfDB) SystemDefs.JavabaseDB).getEntityHeapFile();
+    System.out.print("{");
     try {
       for (int i = 1; i <= fieldCount - 1; i++) {
-        Label subject = Entity_HF.getLabel(this.getEIDField(i).returnLID());
+        Label subject = entityHeapFile.getLabel(this.getEIDFieldFromBP(i).returnLID());
         System.out.printf("%30s  ", subject.getLabel());
       }
-      System.out.print(getDoubleFld(fieldCount));
-      System.out.println("]");
+      System.out.print(getDoubleField(fieldCount));
+      System.out.println("}");
 
     } catch (InvalidSlotNumberException e) {
       e.printStackTrace();
@@ -473,29 +495,35 @@ public class BasicPattern implements GlobalConst {
   }
 
 
-  public void printIDs() {
-    System.out.print("[");
+  public void printDataFromBasicPattern() {
+    System.out.print("{");
     try {
       for (int i = 1; i <= fieldCount - 1; i++) {
         System.out.print(
-            "(" + this.getEIDField(i).getPageNo().pid + "," + this.getEIDField(i).getSlotNo()
+            "(" + this.getEIDFieldFromBP(i).getPageNo().pid + "," + this.getEIDFieldFromBP(i)
+                .getSlotNo()
                 + ")");
       }
-      System.out.print("Confidence:: " + getDoubleFld(fieldCount));
-      System.out.println("]");
+      System.out.print("CONFIDENCE:: " + getDoubleField(fieldCount));
+      System.out.println("}");
 
     } catch (Exception e) {
-      System.out.println("Error printing BP" + e);
+      System.out.println("Error printing BASICPATTERN" + e);
     }
   }
 
 
-  public boolean findEID(EID eid) {
+  /**
+   * checks if the given EID is in the basic pattern.
+   *
+   * @param eid
+   * @return true if found else returns false.
+   */
+  public boolean findEIDInBasicPattern(EID eid) {
     boolean found = false;
     try {
-      EID e = null;
       for (int i = 1; i <= fieldCount - 1; i++) {
-        if (eid.equals(getEIDField(i))) {
+        if (eid.equals(getEIDFieldFromBP(i))) {
           found = true;
           break;
         }
