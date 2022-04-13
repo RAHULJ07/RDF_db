@@ -121,7 +121,7 @@ public class RdfDBTest {
       String rdfDBName = "/tmp/rdf/test";
       IndexOption indexOption = IndexOption.Confidence;
 
-      RDFSystemDefs.init(rdfDBName, indexOption);
+//      RDFSystemDefs.init(rdfDBName, indexOption);
       return true;
     }
   }

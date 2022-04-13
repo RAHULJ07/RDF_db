@@ -67,10 +67,22 @@ public class RDFDatabase {
   }
 
   /**
+   * Executes the join sort query on the database.
+   *
+   * @param query
+   * @throws Exception
+   */
+  public void joinSort(DBJoinSortQuery query) throws Exception{
+    query.execute();
+  }
+
+  /**
    * Cleans up RSFSystemDef
    * @throws Exception
    */
   public void close() throws Exception {
     RDFSystemDefs.close();
   }
+
+
 }

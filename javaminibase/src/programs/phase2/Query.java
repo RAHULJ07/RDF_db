@@ -1,4 +1,4 @@
-package programs;
+package programs.phase2;
 
 import db.QueryFactory;
 import db.QueryType;

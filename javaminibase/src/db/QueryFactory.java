@@ -15,9 +15,12 @@ public class QueryFactory {
     }
 
     IParser parser = ParserFactory.getParser(queryType);
+
     if (queryType == QueryType.INSERT) {
       return parser.parse(query);
     } else if (queryType == QueryType.SELECT) {
+      return parser.parse(query);
+    } else if(queryType == QueryType.JOIN_SORT) {
       return parser.parse(query);
     }
     return null;
