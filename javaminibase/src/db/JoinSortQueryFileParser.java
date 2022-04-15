@@ -39,7 +39,7 @@ public class JoinSortQueryFileParser {
     int outputRightObject2;
 
     BPOrder sortOrder;
-    int sortNodeIdPos;
+    int numberOfPages;
 
     int start = queryString.indexOf("(") + 1;
     int end = queryString.lastIndexOf(")");
@@ -58,7 +58,7 @@ public class JoinSortQueryFileParser {
       sortOrder = null;
     }
 
-    sortNodeIdPos = Integer.parseInt(tokens[1]);
+    numberOfPages = Integer.parseInt(tokens[1]);
 
     start = sortParameters.indexOf("(") + 1;
     end = sortParameters.lastIndexOf(")");
@@ -226,7 +226,7 @@ public class JoinSortQueryFileParser {
     query.setOutputRightObject2(outputRightObject2);
 
     query.setSortOrder(sortOrder);
-    query.setSortNodeIdPos(sortNodeIdPos);
+    query.setNumberOfPages(numberOfPages);
 
     System.out.println("query = " + query);
 

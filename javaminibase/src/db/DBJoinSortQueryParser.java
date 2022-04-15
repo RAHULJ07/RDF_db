@@ -1,6 +1,6 @@
 package db;
 
-public class JoinSortQueryParser implements IParser {
+public class DBJoinSortQueryParser implements IParser {
   public IQuery parse(String query) throws IllegalArgumentException {
     /**
      * RDFDBNAME QUERYFILE NUMBUF INDEXOPTION

@@ -30,7 +30,7 @@ public class JoinSortQuery {
   private int outputRightObject2;
 
   private BPOrder sortOrder;
-  private int sortNodeIdPos;
+  private int numberOfPages;
 
   public JoinSortQuery() {
   }
@@ -219,12 +219,12 @@ public class JoinSortQuery {
     this.sortOrder = sortOrder;
   }
 
-  public int getSortNodeIdPos() {
-    return sortNodeIdPos;
+  public int getNumberOfPages() {
+    return numberOfPages;
   }
 
-  public void setSortNodeIdPos(int sortNodeIdPos) {
-    this.sortNodeIdPos = sortNodeIdPos;
+  public void setNumberOfPages(int numberOfPages) {
+    this.numberOfPages = numberOfPages;
   }
 
   @Override
@@ -253,7 +253,7 @@ public class JoinSortQuery {
         ", outputRightSubject2=" + outputRightSubject2 +
         ", outputRightObject2=" + outputRightObject2 +
         ", sortOrder=" + sortOrder +
-        ", sortNodeIdPos=" + sortNodeIdPos +
+        ", sortNodeIdPos=" + numberOfPages +
         '}';
   }
 }

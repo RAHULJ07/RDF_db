@@ -19,7 +19,7 @@ public class ParserFactory {
     } else if (queryType == QueryType.SELECT) {
       return new SelectQueryParser();
     } else if(queryType == QueryType.JOIN_SORT) {
-      return new JoinSortQueryParser();
+      return new DBJoinSortQueryParser();
     }
     return null;
   }
