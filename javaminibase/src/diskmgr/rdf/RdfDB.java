@@ -714,4 +714,8 @@ public class RdfDB extends DB {
 
     return Paths.get(fileName.toString()).toString();
   }
+
+  public LabelHeapFile getEntityHeapFile(){
+    return entityHeapFile;
+  }
 }

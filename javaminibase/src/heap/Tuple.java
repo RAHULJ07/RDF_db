@@ -324,6 +324,51 @@ public class Tuple implements GlobalConst {
         }
     }
 
+
+    /**
+     * Set this field to double value
+     *
+     * @param     fldNo   the field number
+     * @param     val     the double value
+     * @exception   IOException I/O errors
+     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
+     */
+
+    public Tuple setDoubleFld(int fldNo, double val)
+        throws IOException, FieldNumberOutOfBoundException
+    {
+        if ( (fldNo > 0) && (fldNo <= fldCnt))
+        {
+            Convert.setDoubleValue(val, fldOffset[fldNo -1], data);
+            return this;
+        }
+        else
+            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+    }
+
+    /**
+     * Convert this field in to double
+     *
+     * @param    fldNo   the field number
+     * @return           the converted float number  if success
+     *
+     * @exception   IOException I/O errors
+     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
+     */
+
+    public double getDoubleFld(int fldNo)
+        throws IOException, FieldNumberOutOfBoundException
+    {
+        double val;
+        if ( (fldNo > 0) && (fldNo <= fldCnt))
+        {
+            val = Convert.getDoubleValue(fldOffset[fldNo -1], data);
+            return val;
+        }
+        else
+            throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+    }
+
     /**
      * Set this field to String value
      *
@@ -404,6 +449,11 @@ public class Tuple implements GlobalConst {
                 case AttrType.attrReal:
                     incr = 4;
                     break;
+
+                case AttrType.attrDouble:
+                    incr = 8;
+                    break;
+
                 case AttrType.attrBytes:
                     incr = strSizes[strCount];
                     strCount++;
@@ -429,6 +479,10 @@ public class Tuple implements GlobalConst {
 
             case AttrType.attrReal:
                 incr = 4;
+                break;
+
+            case AttrType.attrDouble:
+                incr =8;
                 break;
 
             case AttrType.attrBytes:
@@ -489,6 +543,7 @@ public class Tuple implements GlobalConst {
         int i, val;
         float fval;
         String sval;
+        double dval;
         byte[] buff;
 
         System.out.print("[");
@@ -503,6 +558,11 @@ public class Tuple implements GlobalConst {
                 case AttrType.attrReal:
                     fval = Convert.getFloValue(fldOffset[i], data);
                     System.out.print(fval);
+                    break;
+
+                case AttrType.attrDouble:
+                    dval = Convert.getDoubleValue(fldOffset[i], data);
+                    System.out.print(dval);
                     break;
 
                 case AttrType.attrString:

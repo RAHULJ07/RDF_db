@@ -68,6 +68,35 @@ public class Convert {
   }
 
   /**
+   * read 8 bytes from given byte array at the specified position
+   * convert it to a double value
+   * @param position in data[]
+   * @param data a byte array
+   * @return the double value
+   * @throws java.io.IOException I/O errors
+   */
+  public static double getDoubleValue (int position, byte []data)
+      throws java.io.IOException
+  {
+    InputStream in;
+    DataInputStream instr;
+    double value;
+    byte tmp[] = new byte[8];
+
+    // copy the value from data array out to a tmp byte array
+    System.arraycopy (data, position, tmp, 0, 8);
+
+    /* creates a new data input stream to read data from the
+     * specified input stream
+     */
+    in = new ByteArrayInputStream(tmp);
+    instr = new DataInputStream(in);
+    value = instr.readDouble();
+
+    return value;
+  }
+
+  /**
    * read 2 bytes from given byte array at the specified position convert it to a short integer
    *
    * @param data     a byte array
@@ -221,6 +250,36 @@ public class Convert {
 
     // copies the first 4 bytes of this byte array into data[]
     System.arraycopy(B, 0, data, position, 4);
+  }
+
+  /**
+   * update a double value in the given byte array at the specified position
+   * @param value the value to be copied into the data[]
+   * @param position the position of tht value in data[]
+   * @param data a byte array
+   * @throws java.io.IOException
+   */
+  public static void setDoubleValue (double value, int position, byte []data)
+      throws java.io.IOException
+  {
+    /* creates a new data output stream to write data to
+     * underlying output stream
+     */
+
+    OutputStream out = new ByteArrayOutputStream();
+    DataOutputStream outstr = new DataOutputStream (out);
+
+    // write the value to the output stream
+
+    outstr.writeDouble(value);
+
+    // creates a byte array with this output stream size and the
+    // valid contents of the buffer have been copied into it
+    byte []B = ((ByteArrayOutputStream) out).toByteArray();
+
+    // copies the first 4 bytes of this byte array into data[]
+    System.arraycopy (B, 0, data, position, 8);
+
   }
 
   /**

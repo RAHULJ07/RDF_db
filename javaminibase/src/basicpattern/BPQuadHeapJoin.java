@@ -46,7 +46,7 @@ public class BPQuadHeapJoin extends BaseBPQuadJoin {
    */
   public IStream getStream() throws Exception {
     return ((RdfDB) SystemDefs.JavabaseDB).openTStream(
-        new QuadOrder(QuadOrder.SubjectPredicateObjectConfidence),
+        new QuadOrder(QuadOrder.NoOrder),
         this.amt_of_mem,
         this.RightSubjectFilter,
         this.RightPredicateFilter,
