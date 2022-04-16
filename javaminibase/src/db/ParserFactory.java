@@ -7,6 +7,7 @@ package db;
  * for :-
  * 1. InsertQueryParser
  * 2. SelectQueryParser
+ * 3. DBJoinSortQueryParser
  */
 public class ParserFactory {
   public static IParser getParser(QueryType queryType) {
@@ -18,6 +19,8 @@ public class ParserFactory {
       return new InsertQueryParser();
     } else if (queryType == QueryType.SELECT) {
       return new SelectQueryParser();
+    } else if(queryType == QueryType.JOIN_SORT) {
+      return new DBJoinSortQueryParser();
     }
     return null;
   }
