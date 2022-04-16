@@ -55,7 +55,7 @@ public class BPUtils {
         char[] c_max = new char[1];
         c_max[0] = Character.MAX_VALUE;
         String s_max = new String(c_max);
-        LabelHeapFile Elhf = SystemDefs.JavabaseDB.getEntityHandle();
+        LabelHeapFile Elhf = SystemDefs.JavabaseDB.getEntityHeapFile();
 
         switch (fldType.attrType) {
             case AttrType.attrInteger:                // Compare two integers.

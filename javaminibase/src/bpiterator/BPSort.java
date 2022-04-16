@@ -1,6 +1,8 @@
 package bpiterator;
 
+import basicpattern.BasicPattern;
 import global.AttrType;
+import global.BPOrder;
 import global.GlobalConst;
 import global.PageId;
 import heap.FieldNumberOutOfBoundException;
@@ -26,7 +28,7 @@ public class BPSort extends BPIterator implements GlobalConst
   private short[]     str_lens;
   private BPFileScan   _am;
   private int         _sort_fld;
-  private BPOrder  order;
+  private BPOrder order;
   private int         _n_pages;
   private byte[][]    bufs;
   private boolean     first_time;

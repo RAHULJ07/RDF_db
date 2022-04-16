@@ -111,7 +111,7 @@ public class BPFileScan extends  BPIterator
 
 			   BasicPattern bp = new BasicPattern();
 			   try {
-				   bp.setHdr((short)((length1)/2 + 1));
+				   bp.setHeader((short)((length1)/2 + 1));
 			   } catch (InvalidTupleSizeException e) {
 				   // TODO Auto-generated catch block
 				   e.printStackTrace();

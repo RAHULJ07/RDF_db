@@ -13,7 +13,7 @@ import iterator.*;
 import java.io.IOException;
 
 /**
- *All the relational operators and access methods are iterators.
+ *Relational Operators and access methods are iterators.
  */
 public abstract class BPIterator implements Flags {
   
@@ -24,7 +24,7 @@ public abstract class BPIterator implements Flags {
    * multiple calls to the <code>close()</code> function will
    * not be a problem.
    */
-  public boolean closeFlag = false; // added by bingjie 5/4/98
+  public boolean closeFlag = false;
 
   /**
    *abstract method, every subclass must implement it.
@@ -52,6 +52,7 @@ public abstract class BPIterator implements Flags {
 	   Exception;
 
   /**
+   * Closes the iterator
    *@exception IOException I/O errors
    *@exception JoinsException some join exception
    *@exception SortException exception Sort class
@@ -60,23 +61,23 @@ public abstract class BPIterator implements Flags {
     throws IOException, 
 	   SortException;
   /**
-   * tries to get n_pages of buffer space
-   *@param n_pages the number of pages
-   *@param PageIds the corresponding PageId for each page
+   * tries to get num_pages of buffer space
+   *@param num_pages the number of pages
+   *@param pageIds the corresponding PageId for each page
    *@param bufs the buffer space
    *@exception IteratorBMException exceptions from bufmgr layer
    */
-  public void  get_buffer_pages(int n_pages, PageId[] PageIds, byte[][] bufs)
+  public void  get_buffer_pages(int num_pages, PageId[] pageIds, byte[][] bufs)
   throws IteratorBMException
   {
 	  Page pgptr = new Page();        
 	  PageId pgid = null;
 
-	  for(int i=0; i < n_pages; i++) {
+	  for(int i=0; i < num_pages; i++) {
 		  pgptr.setpage(bufs[i]);
 
 		  pgid = newPage(pgptr,1);
-		  PageIds[i] = new PageId(pgid.pid);
+		  pageIds[i] = new PageId(pgid.pid);
 
 		  bufs[i] = pgptr.getpage();
 
@@ -84,18 +85,18 @@ public abstract class BPIterator implements Flags {
   }
 
   /**
-   *free all the buffer pages we requested earlier.
+   * Free all the buffer pages we requested earlier.
    * should be called in the destructor
    *@param n_pages the number of pages
-   *@param PageIds  the corresponding PageId for each page
+   *@param pageIds  the corresponding PageId for each page
    *@exception IteratorBMException exception from bufmgr class 
    */
-  public void free_buffer_pages(int n_pages, PageId[] PageIds) 
+  public void free_buffer_pages(int n_pages, PageId[] pageIds)
   throws IteratorBMException
   {
 	  for (int i=0; i<n_pages; i++) 
 	  {
-		  freePage(PageIds[i]);
+		  freePage(pageIds[i]);
 	  }
   }
 
@@ -110,10 +111,16 @@ public abstract class BPIterator implements Flags {
 		  throw new IteratorBMException(e,"Iterator.java: freePage() failed");
 	  }
 
-  } // end of freePage
+  }
 
-  private PageId newPage(Page page, int num)
-  throws IteratorBMException 
+	/**
+	 * Create a new page
+	 * @param page page
+	 * @param num number integer
+	 * @return PageId
+	 * @throws IteratorBMException
+	 */
+  private PageId newPage(Page page, int num) throws IteratorBMException
   {
 	  PageId tmpId = new PageId();
 	  try 
@@ -127,5 +134,5 @@ public abstract class BPIterator implements Flags {
 
 	  return tmpId;
 
-  } // end of newPage
+  }
 }
