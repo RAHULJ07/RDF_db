@@ -718,4 +718,5 @@ public class RdfDB extends DB {
   public LabelHeapFile getEntityHeapFile(){
     return entityHeapFile;
   }
+
 }

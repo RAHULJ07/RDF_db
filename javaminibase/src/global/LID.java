@@ -178,4 +178,11 @@ public class LID implements ILID {
         ", labelType=" + labelType +
         '}';
   }
+
+  public EID returnEID() {
+
+    EID eid = new EID(this);
+    return eid;
+
+  }
 }
