@@ -6,6 +6,7 @@ import heap.FieldNumberOutOfBoundException;
 import heap.Quadruple;
 import java.io.IOException;
 import java.util.ArrayList;
+import bpiterator.BPIterator;
 
 public abstract class BaseBPQuadJoin implements IBPQuadJoin{
 
@@ -132,7 +133,7 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
    */
   private BasicPattern joinProject(Quadruple quad) throws Exception {
 
-    EID eidOuter = outerTuple.getEIDField(BPJoinNodePosition);
+    EID eidOuter = outerTuple.getEIDFld(BPJoinNodePosition);
     EID eidInner;
 
     if (JoinOnSubjectorObject == 0)
@@ -147,7 +148,7 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       ArrayList<EID> nodeIDs = new ArrayList<>();
 
       for (int nodeIdx = 0; nodeIdx < LeftOutNodePosition.length; nodeIdx++) {
-        nodeIDs.add(outerTuple.getEIDField(LeftOutNodePosition[nodeIdx]));
+        nodeIDs.add(outerTuple.getEIDFld(LeftOutNodePosition[nodeIdx]));
         if (LeftOutNodePosition[nodeIdx] == BPJoinNodePosition) {
           isJoinNodeProjected = true; //join node projected from leftOutNodePosition
         }
@@ -182,11 +183,11 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
    * @return
    */
   private BasicPattern getBPfromNodearray(BasicPattern bp, ArrayList<EID> nodeIDs,
-      double minConfidence) {
+      double minConfidence) throws Exception {
     if (nodeIDs.size() != 0) {
       int nodeidx;
 
-      bp.setHdr((short) (nodeIDs.size() + 1));
+      bp.setHeader((short) (nodeIDs.size() + 1));
       for (nodeidx = 0; nodeidx < nodeIDs.size(); nodeidx++) {
         bp.setEIDField(nodeidx + 1, nodeIDs.get(nodeidx));
       }
@@ -206,10 +207,10 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
   private double getMinConfidence(Quadruple quad)
       throws FieldNumberOutOfBoundException, IOException {
     double minConfidence = 0.0;
-    if (quad.getConfidence() <= outerTuple.getDoubleFld(outerTuple.numberOfFlds()))
+    if (quad.getConfidence() <= outerTuple.getDoubleFld(outerTuple.numberOfFields()))
       minConfidence = quad.getConfidence();
     else
-      minConfidence = outerTuple.getDoubleFld(outerTuple.numberOfFlds());
+      minConfidence = outerTuple.getDoubleFld(outerTuple.numberOfFields());
     return minConfidence;
   }
 

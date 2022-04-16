@@ -4,6 +4,7 @@ import diskmgr.rdf.IStream;
 import diskmgr.rdf.RdfDB;
 import global.QuadOrder;
 import global.SystemDefs;
+import bpiterator.BPIterator;
 
 public class BPQuadIndexJoin extends BaseBPQuadJoin {
 
