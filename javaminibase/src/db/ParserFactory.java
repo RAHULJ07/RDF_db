@@ -7,6 +7,7 @@ package db;
  * for :-
  * 1. InsertQueryParser
  * 2. SelectQueryParser
+ * 3. DBJoinSortQueryParser
  */
 public class ParserFactory {
   public static IParser getParser(QueryType queryType) {
