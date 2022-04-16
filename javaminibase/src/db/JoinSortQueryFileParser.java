@@ -49,11 +49,11 @@ public class JoinSortQueryFileParser {
     String sortRightParameters = sortParameters.substring(sortParameters.lastIndexOf(")") + 1, sortParameters.length());
     String[] tokens = sortRightParameters.split(",");
     if(Integer.parseInt(tokens[0]) == 0) {
-      sortOrder = BPOrder.ASCENDING;
+      sortOrder = new BPOrder(0); //Ascending
     } else if(Integer.parseInt(tokens[0]) == 1) {
-      sortOrder = BPOrder.DESCENDING;
+      sortOrder = new BPOrder(1); //Descending
     } else if(Integer.parseInt(tokens[0]) == 2) {
-      sortOrder = BPOrder.RANDOM;
+      sortOrder = new BPOrder(3); //Random
     } else {
       sortOrder = null;
     }
