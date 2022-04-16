@@ -1,16 +1,37 @@
 package global;
 
-public enum BPOrder {
-  ASCENDING(0),
-  DESCENDING(1),
-  RANDOM(2);
+/** 
+ * Enumeration class for BPOrder
+ */
 
-  private final int order;
+public class BPOrder {
 
-  BPOrder(final int order) {
-    this.order = order;
+  public static final int Ascending  = 0;
+  public static final int Descending = 1;
+  public static final int Random     = 2;
+
+  public int bpOrder;
+
+  /** 
+   * BPOrder Constructor
+   * @param _bpOrder The possible ordering of the tuples 
+   */
+
+  public BPOrder(int _bpOrder) {
+	  bpOrder = _bpOrder;
   }
 
-  public int getOrder() { return order; }
+  public String toString() {
+    
+    switch (bpOrder) {
+    case Ascending:
+      return "Ascending";
+    case Descending:
+      return "Descending";
+    case Random:
+      return "Random";
+    }
+    return ("Unexpected TupleOrder " + bpOrder);
+  }
 
 }
