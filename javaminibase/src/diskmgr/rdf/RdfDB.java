@@ -673,6 +673,35 @@ public class RdfDB extends DB {
         predicateHeapFile);
   }
 
+  /**
+   * Intialize a stream of quadruples, with a file scan
+   * @param orderType
+   * @param numBuf
+   * @param subjectFilter
+   * @param predicateFilter
+   * @param objectFilter
+   * @param confidenceFilter
+   * @return
+   * @throws Exception
+   */
+  public TStream openTStream(
+      QuadOrder orderType,
+      int numBuf,
+      String subjectFilter,
+      String predicateFilter,
+      String objectFilter,
+      Float confidenceFilter) throws Exception{
+    return new TStream(
+        orderType,
+        numBuf,
+        quadrupleHeapFile,
+        subjectFilter,
+        predicateFilter,
+        objectFilter,
+        confidenceFilter
+    );
+  }
+
   private String generateFilePath(String[] identifiers) {
     StringBuilder fileName = new StringBuilder();
 

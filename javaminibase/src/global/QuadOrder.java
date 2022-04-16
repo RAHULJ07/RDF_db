@@ -7,7 +7,7 @@ public class QuadOrder {
   public static final int PredicateConfidence = 4;
   public static final int ObjectConfidence = 5;
   public static final int Confidence = 6;
-
+  public static final int NoOrder = 7;
   public int quadOrder;
 
   /**
@@ -44,6 +44,8 @@ public class QuadOrder {
         return "ObjectConfidence";
       case Confidence:
         return "Confidence";
+      case NoOrder:
+        return "NoOrder";
     }
     return ("Unexpected TupleOrder " + quadOrder);
   }
