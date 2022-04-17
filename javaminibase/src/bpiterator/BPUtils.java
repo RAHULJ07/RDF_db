@@ -1,10 +1,8 @@
 package bpiterator;
 
 
-import global.AttrType;
-import global.LID;
-import global.PageId;
-import global.SystemDefs;
+import diskmgr.rdf.RdfDB;
+import global.*;
 import heap.*;
 import heap.labelheap.LabelHeapFile;
 import iterator.TupleUtilsException;
@@ -55,7 +53,7 @@ public class BPUtils {
         char[] c_max = new char[1];
         c_max[0] = Character.MAX_VALUE;
         String s_max = new String(c_max);
-        LabelHeapFile Elhf = SystemDefs.JavabaseDB.getEntityHeapFile();
+        LabelHeapFile Elhf = ((RdfDB) SystemDefs.JavabaseDB).getEntityHeapFile();
 
         switch (fldType.attrType) {
             case AttrType.attrInteger:                // Compare two integers.
