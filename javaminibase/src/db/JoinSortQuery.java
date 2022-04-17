@@ -30,6 +30,7 @@ public class JoinSortQuery {
   private int outputRightObject2;
 
   private BPOrder sortOrder;
+  private int sortNodeIDPos;
   private int numberOfPages;
 
   public JoinSortQuery() {
@@ -219,6 +220,14 @@ public class JoinSortQuery {
     this.sortOrder = sortOrder;
   }
 
+  public int getSortNodeIDPos() {
+    return sortNodeIDPos;
+  }
+
+  public void setSortNodeIDPos(int sortNodeIDPos) {
+    this.sortNodeIDPos = sortNodeIDPos;
+  }
+
   public int getNumberOfPages() {
     return numberOfPages;
   }
@@ -253,7 +262,8 @@ public class JoinSortQuery {
         ", outputRightSubject2=" + outputRightSubject2 +
         ", outputRightObject2=" + outputRightObject2 +
         ", sortOrder=" + sortOrder +
-        ", sortNodeIdPos=" + numberOfPages +
+        ", sortNodeIDPos=" + sortNodeIDPos +
+        ", numberOfPages=" + numberOfPages +
         '}';
   }
 }
