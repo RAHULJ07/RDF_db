@@ -1,5 +1,7 @@
 package diskmgr.rdf;
 
+import basicpattern.BasicPattern;
+import global.EID;
 import global.QuadOrder;
 import heap.Quadruple;
 import heap.quadrupleheap.QuadrupleHeapFile;
@@ -61,5 +63,32 @@ public class TStream extends BaseStream {
   @Override
   public void closeStream() throws Exception {
     iter.close();
+  }
+
+  /**
+   * Gets next basicpattern from the stream.
+   * @return basic battern extracted from the quadruples
+   */
+  @Override
+  public BasicPattern getNextBasicPatternFromQuadruple(){
+    try
+    {
+      Quadruple quadruple = null;
+      while((quadruple = getNext())!=null)
+      {
+        BasicPattern basicPattern = new BasicPattern();
+        basicPattern.setHeader((short)3);
+        basicPattern.setEIDField(1, (EID)quadruple.getSubjectID());
+        basicPattern.setEIDField(2, (EID)quadruple.getObjectID());
+        basicPattern.setDoubleField(3, (double)quadruple.getConfidence());
+        return basicPattern;
+      }
+    }
+    catch(Exception e)
+    {
+      System.out.println("Error getting next basic pattern "+e);
+    }
+    return null;
+
   }
 }
