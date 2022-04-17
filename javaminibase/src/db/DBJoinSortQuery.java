@@ -13,7 +13,8 @@ import global.SystemDefs;
 import heap.Heapfile;
 import java.util.stream.Stream;
 
-public class DBJoinSortQuery extends BaseQuery implements IQuery{
+public class DBJoinSortQuery extends BaseQuery implements IQuery {
+
   private String queryFile;
   private int numBuf;
   private IndexOption indexOption;
@@ -63,24 +64,24 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery{
 
     QuadOrder quadOrder = new QuadOrder(7);
     TStream stream = ((RdfDB) SystemDefs.JavabaseDB).openTStream(quadOrder, numBuf,
-        query.getSubjectFilter1(),query.getPredicateFilter1(),query.getObjectFilter1(),query.getConfidenceFilter1());
-
+        query.getSubjectFilter1(), query.getPredicateFilter1(), query.getObjectFilter1(),
+        query.getConfidenceFilter1());
 
     Heapfile heapfile = new Heapfile("BP_HEAPFILE");
     BasicPattern basicPattern = null;
 
     System.out.println("Printing  Basic Patterns from BP HeapFile");
 
-    while ((basicPattern = stream.getNextBasicPatternFromQuadruple())!=null){
+    while ((basicPattern = stream.getNextBasicPatternFromQuadruple()) != null) {
       basicPattern.printBasicPattern();
       heapfile.insertRecord(basicPattern.getTupleFromBasicPattern().getTupleByteArray());
     }
 
-    if(stream!=null){
+    if (stream != null) {
       stream.closeStream();
     }
 
-    if(heapfile.getRecCnt()>0) {
+    if (heapfile.getRecCnt() > 0) {
 
       //Start First Join
       Heapfile joinHeapFile1 = new Heapfile("JOIN_HEAP_FILE1");
@@ -133,26 +134,28 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery{
 
       joinHeapFile1.deleteFile();
 
-      if(joinHeapFile2.getRecCnt() > 0){
+      if (joinHeapFile2.getRecCnt() > 0) {
         BPFileScan bpFileScan2 = null;
-        try{
-          bpFileScan2 =new BPFileScan("JOIN_HEAP_FILE2", fieldCount2);
+        try {
+          bpFileScan2 = new BPFileScan("JOIN_HEAP_FILE2", fieldCount2);
         } catch (Exception e) {
           e.printStackTrace();
         }
 
         BPSort bpSort = null;
         BPOrder bpOrder = query.getSortOrder();
-        try{
-          bpSort = new BPSort(bpFileScan2, bpOrder, query.getSortNodeIDPos(), query.getNumberOfPages());
+        try {
+          bpSort = new BPSort(bpFileScan2, bpOrder, query.getSortNodeIDPos(),
+              query.getNumberOfPages());
         } catch (Exception e) {
           e.printStackTrace();
         }
         System.out.println("Printing results after sorting : ");
 
-        try{
-          while((basicPattern=bpSort.get_next())!=null){
-            basicPattern.printBasicPattern();;
+        try {
+          while ((basicPattern = bpSort.get_next()) != null) {
+            basicPattern.printBasicPattern();
+            ;
           }
         } catch (Exception e) {
           e.printStackTrace();
@@ -160,11 +163,10 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery{
         bpSort.close();
       }
       joinHeapFile2.deleteFile();
-    }
-
-    else{
-      System.out.println("Correct Query Execution order of Parametres : RDFDBNAME QUERYFILE NUMBUF");
-      return ;
+    } else {
+      System.out.println(
+          "Correct Query Execution order of Parametres : RDFDBNAME QUERYFILE NUMBUF");
+      return;
     }
     //
 

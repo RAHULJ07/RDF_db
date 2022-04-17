@@ -12,9 +12,9 @@ import iterator.QuadFileScan;
  * Quadruple File Stream
  */
 public class TStream extends BaseStream {
+
   /**
-   * Iterator which iterates over the quadruple
-   * from the quadruple heap file.
+   * Iterator which iterates over the quadruple from the quadruple heap file.
    */
   private Iterator iter;
 
@@ -38,14 +38,14 @@ public class TStream extends BaseStream {
       String _predicateFilter,
       String _objectFilter,
       Float _confidenceFilter) throws Exception {
-    SelectFilter selectFilter = new SelectFilter(_subjectFilter, _predicateFilter, _objectFilter, _confidenceFilter);
+    SelectFilter selectFilter = new SelectFilter(_subjectFilter, _predicateFilter, _objectFilter,
+        _confidenceFilter);
     Iterator am = new QuadFileScan(quadrupleHeapFile, selectFilter);
     iter = init(_orderType, _numBuf, am);
   }
 
   /**
-   * Returns the next Quadruple.
-   * null if we reached the end of the stream
+   * Returns the next Quadruple. null if we reached the end of the stream
    *
    * @return
    * @throws Exception
@@ -67,26 +67,23 @@ public class TStream extends BaseStream {
 
   /**
    * Gets next basicpattern from the stream.
+   *
    * @return basic battern extracted from the quadruples
    */
   @Override
-  public BasicPattern getNextBasicPatternFromQuadruple(){
-    try
-    {
+  public BasicPattern getNextBasicPatternFromQuadruple() {
+    try {
       Quadruple quadruple = null;
-      while((quadruple = getNext())!=null)
-      {
+      while ((quadruple = getNext()) != null) {
         BasicPattern basicPattern = new BasicPattern();
-        basicPattern.setHeader((short)3);
-        basicPattern.setEIDField(1, (EID)quadruple.getSubjectID());
-        basicPattern.setEIDField(2, (EID)quadruple.getObjectID());
-        basicPattern.setDoubleField(3, (double)quadruple.getConfidence());
+        basicPattern.setHeader((short) 3);
+        basicPattern.setEIDField(1, (EID) quadruple.getSubjectID());
+        basicPattern.setEIDField(2, (EID) quadruple.getObjectID());
+        basicPattern.setDoubleField(3, (double) quadruple.getConfidence());
         return basicPattern;
       }
-    }
-    catch(Exception e)
-    {
-      System.out.println("Error getting next basic pattern "+e);
+    } catch (Exception e) {
+      System.out.println("Error getting next basic pattern " + e);
     }
     return null;
 
