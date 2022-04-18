@@ -75,6 +75,7 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
     while ((basicPattern = stream.getNextBasicPatternFromQuadruple()) != null) {
       basicPattern.printBasicPattern();
       heapfile.insertRecord(basicPattern.getTupleFromBasicPattern().getTupleByteArray());
+
     }
 
     if (stream != null) {

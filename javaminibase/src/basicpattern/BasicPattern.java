@@ -452,7 +452,7 @@ public class BasicPattern implements GlobalConst {
      */
     public void printBasicPattern()
             throws IOException {
-        initRdfDB();
+
         LabelHeapFile entityHeapFile = ((RdfDB) SystemDefs.JavabaseDB).getEntityHeapFile();
         System.out.print("{");
         try {
