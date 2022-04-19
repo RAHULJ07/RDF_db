@@ -70,7 +70,6 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
     Heapfile heapfile = new Heapfile("BP_HEAPFILE");
     BasicPattern basicPattern = null;
-    heapfile.deleteFile();
     System.out.println("Printing  Basic Patterns from BP HeapFile");
 
     while ((basicPattern = stream.getNextBasicPatternFromQuadruple()) != null) {
