@@ -8,6 +8,7 @@ import bpiterator.BPSort;
 import btree.lablebtree.BTFileScan;
 import diskmgr.rdf.RdfDB;
 import diskmgr.rdf.TStream;
+import global.AttrType;
 import global.BPOrder;
 import global.QuadOrder;
 import global.SystemDefs;
@@ -68,12 +69,15 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
         query.getSubjectFilter1(), query.getPredicateFilter1(), query.getObjectFilter1(),
         query.getConfidenceFilter1());
 
-    Heapfile heapfile = new Heapfile("BP_HEAPFILE");
+
+
+    Heapfile heapfile = new Heapfile("BP_HEAP");
     BasicPattern basicPattern = null;
     System.out.println("Printing  Basic Patterns from BP HeapFile");
 
     while ((basicPattern = stream.getNextBasicPatternFromQuadruple()) != null) {
       basicPattern.printBasicPattern();
+
       heapfile.insertRecord(basicPattern.getTupleFromBasicPattern().getTupleByteArray());
 
     }
@@ -86,7 +90,7 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
       //Start First Join
       Heapfile joinHeapFile1 = new Heapfile("JOIN_HEAP_FILE1");
-      BPFileScan bpFileScan = new BPFileScan("BP_HEAPFILE", 3);
+      BPFileScan bpFileScan = new BPFileScan("BP_HEAP", 3);
 
       BPQuadHeapJoin bpQuadHeapJoin = new BPQuadHeapJoin(numBuf, 3, bpFileScan,
           query.getBpJoinNodePosition1(),
@@ -106,7 +110,7 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
         basicPattern = bpQuadHeapJoin.get_next();
       }
       bpQuadHeapJoin.close();
-      heapfile.deleteFile();
+//      heapfile.deleteFile();
 
       //end of first join
 
@@ -179,7 +183,7 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
       //Start First Join
       Heapfile joinHeapFile1 = new Heapfile("JOIN_HEAP_FILE1");
-      BPFileScan bpFileScan = new BPFileScan("BP_HEAPFILE", 3);
+      BPFileScan bpFileScan = new BPFileScan("BP_HEAP", 3);
 
        BPQuadIndexJoin bpQuadIndexJoin = new BPQuadIndexJoin(numBuf, 3, bpFileScan,
           query.getBpJoinNodePosition1(),
@@ -271,7 +275,7 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
       //Start First Join
       Heapfile joinHeapFile1 = new Heapfile("JOIN_HEAP_FILE1");
-      BPFileScan bpFileScan = new BPFileScan("BP_HEAPFILE", 3);
+      BPFileScan bpFileScan = new BPFileScan("BP_HEAP", 3);
 
       BPQuadHeapJoin bpQuadHeapJoin = new BPQuadHeapJoin(numBuf, 3, bpFileScan,
           query.getBpJoinNodePosition1(),
@@ -291,7 +295,7 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
         basicPattern = bpQuadHeapJoin.get_next();
       }
       bpQuadHeapJoin.close();
-      heapfile.deleteFile();
+//      heapfile.deleteFile();
 
       //end of first join
 
