@@ -28,7 +28,7 @@ public class RDFSystemDefs extends SystemDefs {
       String rdfDbPath,
       IndexOption _indexOption,
       int _bufPoolSize) {
-    telemetry = new Telemetry(rdfDbPath);
+    Telemetry.initialize();
     bufPoolSize = _bufPoolSize;
     JavabaseDBName = rdfDbPath;
     indexOption = _indexOption;
@@ -65,6 +65,5 @@ public class RDFSystemDefs extends SystemDefs {
     ((RdfDB)SystemDefs.JavabaseDB).close();
     SystemDefs.JavabaseBM.printPinnedBuffer();
     SystemDefs.JavabaseBM.flushAllPages();
-    telemetry.flush();
   }
 }

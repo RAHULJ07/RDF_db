@@ -2,6 +2,7 @@
 
 package diskmgr;
 
+import db.Telemetry;
 import global.Convert;
 import global.GlobalConst;
 import global.PageId;
@@ -146,7 +147,7 @@ public class DB implements GlobalConst {
 
     private void add_read_page() throws FileIOException {
         try {
-            SystemDefs.telemetry.addRead();
+            Telemetry.readIncrement();
         } catch (Exception e) {
             throw new FileIOException(e, "Telemetry file I/O error");
         }
@@ -154,7 +155,7 @@ public class DB implements GlobalConst {
 
     private void add_write_page() throws FileIOException {
         try {
-            SystemDefs.telemetry.addWrite();
+            Telemetry.writeIncrement();
         } catch (Exception e) {
             throw new FileIOException(e, "Telemetry file I/O error");
         }

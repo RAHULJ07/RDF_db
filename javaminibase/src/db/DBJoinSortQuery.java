@@ -5,15 +5,12 @@ import basicpattern.BPQuadIndexJoin;
 import basicpattern.BasicPattern;
 import bpiterator.BPFileScan;
 import bpiterator.BPSort;
-import btree.lablebtree.BTFileScan;
 import diskmgr.rdf.RdfDB;
 import diskmgr.rdf.TStream;
-import global.AttrType;
 import global.BPOrder;
 import global.QuadOrder;
 import global.SystemDefs;
 import heap.Heapfile;
-import java.util.stream.Stream;
 
 public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
@@ -174,6 +171,10 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
           "Correct Query Execution order of Parametres : RDFDBNAME QUERYFILE NUMBUF");
       return;
     }
+
+    System.out.println("After 1st Strategy : ");
+    Telemetry.prinTelemetry();
+
     //End Strategy 1
 
     //Start Strategy 2 , This join does QuadIndexJoin on the first Join and QuadHeapFileJoin on
@@ -266,6 +267,10 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
           "Correct Query Execution order of Parametres : RDFDBNAME QUERYFILE NUMBUF");
       return;
     }
+
+    System.out.println("After 2nd Strategy : ");
+    Telemetry.prinTelemetry();
+
 
     //End Strategy 2
 
@@ -362,6 +367,9 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
     heapfile.deleteFile();
     //End Strategy 3
+
+    System.out.println("After 3rd Strategy : ");
+    Telemetry.prinTelemetry();
 
   }
 }
