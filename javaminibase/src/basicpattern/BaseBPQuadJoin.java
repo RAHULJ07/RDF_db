@@ -90,6 +90,16 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       return null;
     }
 
+    if ((outerTuple = left_iter.get_next()) == null) {
+      //EOF reached for outer file
+      isLeftEOF = true;
+      if (stream != null) {
+        stream.closeStream();
+        stream = null;
+      }
+      return null;
+    }
+
     Quadruple quad = stream.getNext();
     while (quad != null) {
       BasicPattern matchedPattern = joinProject(quad);
@@ -123,6 +133,7 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
     {
       return get_next();
     }
+
   }
 
   /**
@@ -137,9 +148,9 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
     EID eidInner;
 
     if (JoinOnSubjectorObject == 0)
-      eidInner = (EID) innerTuple.getSubjectID();
+      eidInner = (EID) quad.getSubjectID();
     else
-      eidInner = (EID) innerTuple.getObjectID();
+      eidInner = (EID) quad.getObjectID();
 
     if (eidOuter.equals(eidInner)) {
       BasicPattern bp = new BasicPattern();
@@ -148,7 +159,7 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       ArrayList<EID> nodeIDs = new ArrayList<>();
 
       for (int nodeIdx = 0; nodeIdx < LeftOutNodePosition.length; nodeIdx++) {
-        nodeIDs.add(outerTuple.getEIDFld(LeftOutNodePosition[nodeIdx]));
+        nodeIDs.add(outerTuple.getEIDFld(LeftOutNodePosition[nodeIdx]+1));
         if (LeftOutNodePosition[nodeIdx] == BPJoinNodePosition) {
           isJoinNodeProjected = true; //join node projected from leftOutNodePosition
         }
@@ -158,14 +169,14 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       //1) when left out nodes doesnot contain join node
       //2) when join is on subject
       if (OutputRightObject == 1 && (!isJoinNodeProjected || JoinOnSubjectorObject == 0)) {
-        nodeIDs.add((EID) innerTuple.getObjectID());
+        nodeIDs.add((EID) quad.getObjectID());
       }
 
       //Two case for inner projection given OutputRightSubject
       //1) when left out nodes doesnot contain join node
       //2) when join is on object
       if (OutputRightSubject == 1 && (!isJoinNodeProjected || JoinOnSubjectorObject == 1)) {
-        nodeIDs.add((EID) innerTuple.getSubjectID());
+        nodeIDs.add((EID) quad.getSubjectID());
       }
 
       double minConfidence = getMinConfidence(quad);

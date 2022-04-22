@@ -4,6 +4,7 @@ import db.InsertQuery;
 import db.QueryFactory;
 import db.QueryType;
 import db.RDFDatabase;
+import db.Telemetry;
 
 public class BatchInsert {
   public static void main(String[] args) throws Exception {
@@ -18,6 +19,7 @@ public class BatchInsert {
     InsertQuery query = (InsertQuery) QueryFactory.getQuery(QueryType.INSERT, String.join(" ", args));
     RDFDatabase db = new RDFDatabase(query.getDbName(), query.getIndexOption());
     db.insert(query);
+    Telemetry.prinTelemetry();
     db.close();
   }
 }
