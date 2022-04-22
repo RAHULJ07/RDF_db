@@ -9,6 +9,7 @@ import diskmgr.rdf.RdfDB;
 import diskmgr.rdf.TStream;
 import global.BPOrder;
 import global.QuadOrder;
+import global.RDFSystemDefs;
 import global.SystemDefs;
 import heap.Heapfile;
 
@@ -97,12 +98,13 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
           query.getOutputRightSubject1(), query.getOutputRightObject1());
 
       basicPattern = bpQuadHeapJoin.get_next();
-      fieldCount1 = basicPattern.numberOfFields();
+
 
 
       System.out.println("Printing results after first join : ");
       while (basicPattern != null) {
         basicPattern.printBasicPattern();
+        fieldCount1 = basicPattern.numberOfFields();
         joinHeapFile1.insertRecord(basicPattern.getTupleFromBasicPattern().getTupleByteArray());
         basicPattern = bpQuadHeapJoin.get_next();
       }
@@ -174,6 +176,9 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
     System.out.println("After 1st Strategy : ");
     Telemetry.prinTelemetry();
+    Telemetry.initialize();
+
+
 
     //End Strategy 1
 
@@ -270,6 +275,7 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
     System.out.println("After 2nd Strategy : ");
     Telemetry.prinTelemetry();
+    Telemetry.initialize();
 
 
     //End Strategy 2
