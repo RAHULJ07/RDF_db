@@ -257,7 +257,7 @@ public class BPSort extends BPIterator implements GlobalConst
 	      {
 	    	  bp = _am.get_next();
 	    	  if(bp!=null)
-	    		  tuple = bp.getTuplefromBasicPattern();  // according to Iterator.java
+	    		  tuple = bp.getTupleFromBasicPattern();  // according to Iterator.java
 	    	  else
 	    		  tuple = null;
 	    	  if(init_flag==1)
@@ -469,7 +469,7 @@ public class BPSort extends BPIterator implements GlobalConst
 	    		  {
 				bp = _am.get_next();
 				if(bp!=null)
-					tuple = bp.getTuplefromBasicPattern();  // according to Iterator.java
+					tuple = bp.getTupleFromBasicPattern();  // according to Iterator.java
 				else
 					tuple = null;
 	    		  } 

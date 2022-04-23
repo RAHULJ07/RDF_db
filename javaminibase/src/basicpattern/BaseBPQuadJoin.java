@@ -4,6 +4,7 @@ import diskmgr.rdf.IStream;
 import global.EID;
 import heap.FieldNumberOutOfBoundException;
 import heap.Quadruple;
+import iterator.QuadrupleUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import bpiterator.BPIterator;
@@ -72,6 +73,7 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
 
     try {
       stream = getStream();
+      outerTuple = left_iter.get_next();
     } catch (Exception e) {
       System.err.println("Error while opening a stream");
       e.printStackTrace();
@@ -90,7 +92,7 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       return null;
     }
 
-    if ((outerTuple = left_iter.get_next()) == null) {
+    if (outerTuple  == null) {
       //EOF reached for outer file
       isLeftEOF = true;
       if (stream != null) {
@@ -100,12 +102,32 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       return null;
     }
 
+    int quadCount = 0;
+    int mrCount = 0;
+
     Quadruple quad = stream.getNext();
+    quadCount++;
+
+    EID objectEID = (EID) quad.getObjectID();
+    String objectLabel = QuadrupleUtils.entityHeapFile.getLabel(objectEID.returnLID()).getLabel();
+
+    if(objectLabel.equals("Mr")) {
+      mrCount++;
+    }
+
     while (quad != null) {
       BasicPattern matchedPattern = joinProject(quad);
       if (matchedPattern == null) {
         quad = stream.getNext();
+        objectEID = (EID) quad.getObjectID();
+        objectLabel = QuadrupleUtils.entityHeapFile.getLabel(objectEID.returnLID()).getLabel();
+
+        if(objectLabel.equals("Mr")) {
+          mrCount++;
+        }
+        quadCount++;
       } else {
+
         return matchedPattern;
       }
     }
@@ -143,16 +165,22 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
    * @throws Exception
    */
   private BasicPattern joinProject(Quadruple quad) throws Exception {
-
-    EID eidOuter = outerTuple.getEIDFld(BPJoinNodePosition);
+    EID eidOuter = outerTuple.getEIDFld(BPJoinNodePosition + 1);
+    String eidOuterLabel = QuadrupleUtils.entityHeapFile.getLabel(eidOuter.returnLID()).getLabel();
     EID eidInner;
 
     if (JoinOnSubjectorObject == 0)
       eidInner = (EID) quad.getSubjectID();
     else
       eidInner = (EID) quad.getObjectID();
+    String eidInnerLabel = QuadrupleUtils.entityHeapFile.getLabel(eidInner.returnLID()).getLabel();
+
+    if(eidInnerLabel.equals("Mr")) {
+      quad.print();
+    }
 
     if (eidOuter.equals(eidInner)) {
+//      quad.print();
       BasicPattern bp = new BasicPattern();
 
       boolean isJoinNodeProjected = false;

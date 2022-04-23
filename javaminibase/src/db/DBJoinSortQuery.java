@@ -12,6 +12,7 @@ import global.QuadOrder;
 import global.RDFSystemDefs;
 import global.SystemDefs;
 import heap.Heapfile;
+import heap.Tuple;
 
 public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
@@ -72,12 +73,12 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
     Heapfile heapfile = new Heapfile("BP_HEAP");
     BasicPattern basicPattern = null;
     System.out.println("Printing  Basic Patterns from BP HeapFile");
+    Tuple tupleOfBasicPattern = null;
 
     while ((basicPattern = stream.getNextBasicPatternFromQuadruple()) != null) {
       basicPattern.printBasicPattern();
-
-      heapfile.insertRecord(basicPattern.getTupleFromBasicPattern().getTupleByteArray());
-
+      tupleOfBasicPattern = basicPattern.getTupleFromBasicPattern();
+      heapfile.insertRecord(tupleOfBasicPattern.getTupleByteArray());
     }
 
     if (stream != null) {
