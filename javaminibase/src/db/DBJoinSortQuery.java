@@ -126,7 +126,9 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
             query.getOutputRightSubject2(), query.getOutputRightObject2());
 
         BasicPattern basicPattern1 = bpQuadHeapJoin.get_next();
-        fieldCount2 = basicPattern1.numberOfFields();
+        if( basicPattern1 != null){
+          fieldCount2 = basicPattern1.numberOfFields();
+        }
 
         System.out.println("Printing Results after Second Join");
         while (basicPattern1 != null) {
@@ -199,8 +201,9 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
           query.getOutputRightSubject1(), query.getOutputRightObject1());
 
       basicPattern = bpQuadIndexJoin.get_next();
-      fieldCount1 = basicPattern.numberOfFields();
-
+      if(basicPattern != null){
+        fieldCount1 = basicPattern.numberOfFields();
+      }
 
       System.out.println("Printing results after first join : ");
       while (basicPattern != null) {
@@ -209,6 +212,8 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
         basicPattern = bpQuadIndexJoin.get_next();
       }
       bpQuadIndexJoin.close();
+
+
 
       //end of first join
 
@@ -225,7 +230,10 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
             query.getOutputRightSubject2(), query.getOutputRightObject2());
 
         BasicPattern basicPattern1 = bpQuadHeapJoin.get_next();
-        fieldCount2 = basicPattern1.numberOfFields();
+
+        if(basicPattern1 != null){
+          fieldCount2 = basicPattern1.numberOfFields();
+        }
 
         System.out.println("Printing Results after Second Join");
         while (basicPattern1 != null) {
@@ -296,8 +304,10 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
           query.getOutputRightSubject1(), query.getOutputRightObject1());
 
       basicPattern = bpQuadHeapJoin.get_next();
-      fieldCount1 = basicPattern.numberOfFields();
 
+      if(basicPattern != null){
+        fieldCount1 = basicPattern.numberOfFields();
+      }
 
       System.out.println("Printing results after first join : ");
       while (basicPattern != null) {
@@ -323,7 +333,10 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
             query.getOutputRightSubject2(), query.getOutputRightObject2());
 
         BasicPattern basicPattern1 = bpQuadIndexJoin.get_next();
-        fieldCount2 = basicPattern1.numberOfFields();
+
+        if(basicPattern1 != null){
+          fieldCount2 = basicPattern1.numberOfFields();
+        }
 
         System.out.println("Printing Results after Second Join");
         while (basicPattern1 != null) {
