@@ -9,7 +9,6 @@ import diskmgr.rdf.RdfDB;
 import diskmgr.rdf.TStream;
 import global.BPOrder;
 import global.QuadOrder;
-import global.RDFSystemDefs;
 import global.SystemDefs;
 import heap.Heapfile;
 
@@ -175,7 +174,7 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
     }
 
     System.out.println("After 1st Strategy : ");
-    Telemetry.prinTelemetry();
+    Telemetry.printTelemetry();
     Telemetry.initialize();
 
 
@@ -274,7 +273,7 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
     }
 
     System.out.println("After 2nd Strategy : ");
-    Telemetry.prinTelemetry();
+    Telemetry.printTelemetry();
     Telemetry.initialize();
 
 
@@ -375,7 +374,7 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
     //End Strategy 3
 
     System.out.println("After 3rd Strategy : ");
-    Telemetry.prinTelemetry();
+    Telemetry.printTelemetry();
 
   }
 }
