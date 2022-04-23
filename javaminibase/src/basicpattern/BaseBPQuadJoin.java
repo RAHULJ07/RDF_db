@@ -102,32 +102,15 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       return null;
     }
 
-    int quadCount = 0;
-    int mrCount = 0;
 
     Quadruple quad = stream.getNext();
-    quadCount++;
 
-    EID objectEID = (EID) quad.getObjectID();
-    String objectLabel = QuadrupleUtils.entityHeapFile.getLabel(objectEID.returnLID()).getLabel();
-
-    if(objectLabel.equals("Mr")) {
-      mrCount++;
-    }
 
     while (quad != null) {
       BasicPattern matchedPattern = joinProject(quad);
       if (matchedPattern == null) {
         quad = stream.getNext();
-        objectEID = (EID) quad.getObjectID();
-        objectLabel = QuadrupleUtils.entityHeapFile.getLabel(objectEID.returnLID()).getLabel();
-
-        if(objectLabel.equals("Mr")) {
-          mrCount++;
-        }
-        quadCount++;
       } else {
-
         return matchedPattern;
       }
     }
@@ -173,11 +156,6 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       eidInner = (EID) quad.getSubjectID();
     else
       eidInner = (EID) quad.getObjectID();
-    String eidInnerLabel = QuadrupleUtils.entityHeapFile.getLabel(eidInner.returnLID()).getLabel();
-
-    if(eidInnerLabel.equals("Mr")) {
-      quad.print();
-    }
 
     if (eidOuter.equals(eidInner)) {
 //      quad.print();
