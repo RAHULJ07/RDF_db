@@ -58,6 +58,8 @@ public class AttrType {
         return "attrNull";
       case attrBytes:
         return "attrBytes";
+      case attrDouble:
+        return  "attrDouble";
     }
     return ("Unexpected AttrType " + attrType);
   }
