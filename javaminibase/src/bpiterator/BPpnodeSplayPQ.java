@@ -16,14 +16,6 @@ public class BPpnodeSplayPQ extends BPpnodePQ {
      * the root of the tree
      */
     protected BPpnodeSplayNode root;
-  /*
-  pnodeSplayNode*   leftmost();
-  pnodeSplayNode*   rightmost();
-  pnodeSplayNode*   pred(pnodeSplayNode* t);
-  pnodeSplayNode*   succ(pnodeSplayNode* t);
-  void            _kill(pnodeSplayNode* t);
-  pnodeSplayNode*   _copy(pnodeSplayNode* t);
-  */
 
     /**
      * class constructor, sets default values.
@@ -87,7 +79,9 @@ public class BPpnodeSplayPQ extends BPpnodePQ {
                     tr = newnode;
                     comp = 0;
                     done = true;
-                } else comp = BPpnodeCMP(item, tr.item);
+                } else {
+                    comp = BPpnodeCMP(item, tr.item);
+                }
 
                 if ((sort_order.bpOrder == BPOrder.Ascending && comp <= 0) || (sort_order.bpOrder == BPOrder.Descending && comp >= 0)) {
                     l.rt = t;
@@ -110,8 +104,7 @@ public class BPpnodeSplayPQ extends BPpnodePQ {
                     l = tr;
                     t = trr;
                 }
-            } // end of if(comp >= 0)
-            else {
+            } else {
                 BPpnodeSplayNode tl = t.lt;
                 if (tl == null) {
                     tl = newnode;
@@ -140,8 +133,8 @@ public class BPpnodeSplayPQ extends BPpnodePQ {
                     r = tl;
                     t = tll;
                 }
-            } // end of else
-        } // end of while(!done)
+            }
+        }
 
         if ((r.lt = t.rt) != null) r.lt.par = r;
         if ((l.rt = t.lt) != null) l.rt.par = l;
@@ -188,32 +181,7 @@ public class BPpnodeSplayPQ extends BPpnodePQ {
                         l = lll;
                     }
                 }
-            } // end of while(true)
+            }
         }
     }
-  
-  /*  
-                  pnodeSplayPQ(pnodeSplayPQ& a);
-  virtual       ~pnodeSplayPQ();
-
-  Pix           enq(pnode  item);
-  pnode           deq(); 
-
-  pnode&          front();
-  void          del_front();
-
-  int           contains(pnode  item);
-
-  void          clear(); 
-
-  Pix           first(); 
-  Pix           last(); 
-  void          next(Pix& i);
-  void          prev(Pix& i);
-  pnode&          operator () (Pix i);
-  void          del(Pix i);
-  Pix           seek(pnode  item);
-
-  int           OK();                    // rep invariant
-  */
 }

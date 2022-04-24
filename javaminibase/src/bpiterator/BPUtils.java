@@ -1,6 +1,5 @@
 package bpiterator;
 
-
 import diskmgr.rdf.RdfDB;
 import global.AttrType;
 import global.LID;
@@ -21,10 +20,6 @@ public class BPUtils {
     /**
      * This function compares a tuple with another tuple in respective field, and
      * returns:
-     * <p>
-     * 0        if the two are equal,
-     * 1        if the tuple is greater,
-     * -1        if the tuple is smaller,
      *
      * @param fldType   the type of the field being compared.
      * @param t1        one tuple.
@@ -45,7 +40,7 @@ public class BPUtils {
     public static int CompareTupleWithTuple(AttrType fldType,
                                             Tuple t1, int t1_fld_no,
                                             Tuple t2, int t2_fld_no)
-            throws InvalidSlotNumberException, InvalidTupleSizeException, HFException, HFDiskMgrException, HFBufMgrException, Exception {
+            throws InvalidSlotNumberException, HFBufMgrException, Exception {
         int t1_epid, t1_esid,
                 t2_epid, t2_esid;
         double t1_r, t2_r;
@@ -59,7 +54,7 @@ public class BPUtils {
         LabelHeapFile Elhf = ((RdfDB) SystemDefs.JavabaseDB).getEntityHeapFile();
 
         switch (fldType.attrType) {
-            case AttrType.attrInteger:                // Compare two integers.
+            case AttrType.attrInteger:
                 try {
                     t1_esid = t1.getIntFld(t1_fld_no);
                     t1_epid = t1.getIntFld(t1_fld_no + 1);
@@ -75,7 +70,7 @@ public class BPUtils {
                     else if (t1_lid.pageNo.pid == Integer.MAX_VALUE)
                         t1_s = new String(s_max);
                     else {
-                        S1 = Elhf.getLabel(t1_lid);              // Comparing Entities
+                        S1 = Elhf.getLabel(t1_lid);
                         t1_s = S1.getLabel();
                     }
                     if (t2_lid.pageNo.pid < 0) t2_s = new String(s_min);
@@ -91,7 +86,7 @@ public class BPUtils {
                 if (t1_s.compareTo(t2_s) < 0) return -1;
                 return 0;
 
-            case AttrType.attrDouble:                // Compare two floats
+            case AttrType.attrDouble:
                 try {
                     t1_r = t1.getDoubleFld(t1_fld_no);
                     t2_r = t2.getDoubleFld(t2_fld_no);
@@ -108,7 +103,6 @@ public class BPUtils {
 
         }
     }
-
 
     /**
      * This function  compares  tuple1 with another tuple2 whose
@@ -132,10 +126,9 @@ public class BPUtils {
     public static int CompareTupleWithValue(AttrType fldType,
                                             Tuple t1, int t1_fld_no,
                                             Tuple value)
-            throws InvalidSlotNumberException, InvalidTupleSizeException, HFException, HFDiskMgrException, HFBufMgrException, Exception {
+            throws InvalidSlotNumberException, HFBufMgrException, Exception {
         return CompareTupleWithTuple(fldType, t1, t1_fld_no, value, t1_fld_no);
     }
-
 
     /**
      * set up a tuple in specified field from a tuple
@@ -171,11 +164,8 @@ public class BPUtils {
                 break;
             default:
                 throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
-
         }
-
         return;
     }
 }
-  
 
