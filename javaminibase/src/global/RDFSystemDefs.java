@@ -1,6 +1,9 @@
 package global;
 
 import bufmgr.BufMgr;
+import bufmgr.BufMgrException;
+import bufmgr.HashOperationException;
+import bufmgr.PageNotFoundException;
 import db.IndexOption;
 import db.Telemetry;
 import diskmgr.rdf.RdfDB;
@@ -65,5 +68,9 @@ public class RDFSystemDefs extends SystemDefs {
     ((RdfDB)SystemDefs.JavabaseDB).close();
     SystemDefs.JavabaseBM.printPinnedBuffer();
     SystemDefs.JavabaseBM.flushAllPages();
+  }
+
+  public static void forceFlushBuffer() throws PageNotFoundException, HashOperationException, BufMgrException {
+    SystemDefs.JavabaseBM.forceFlushAllPages();
   }
 }
