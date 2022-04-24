@@ -3,6 +3,7 @@ package bpiterator;
 import basicpattern.BasicPattern;
 import bufmgr.PageNotReadException;
 import diskmgr.Page;
+import global.AttrType;
 import global.Flags;
 import global.PageId;
 import global.SystemDefs;
@@ -26,7 +27,10 @@ public abstract class BPIterator implements Flags {
    */
   public boolean closeFlag = false;
 
-  /**
+    protected abstract int generate_runs(int max_elems, AttrType sortFldType)
+            throws Exception;
+
+    /**
    *abstract method, every subclass must implement it.
    *@return the result BasicPattern
    *@exception IOException I/O errors

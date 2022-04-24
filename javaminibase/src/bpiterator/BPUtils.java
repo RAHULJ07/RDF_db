@@ -2,7 +2,10 @@ package bpiterator;
 
 
 import diskmgr.rdf.RdfDB;
-import global.*;
+import global.AttrType;
+import global.LID;
+import global.PageId;
+import global.SystemDefs;
 import heap.*;
 import heap.labelheap.LabelHeapFile;
 import iterator.TupleUtilsException;

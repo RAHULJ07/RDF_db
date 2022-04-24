@@ -24,21 +24,30 @@ public class BasicPattern implements GlobalConst {
 
     /**
      * The start position of the BasicPattern in data[]
+     * Used for reading byte data from certain offsets to
+     * read subject, object etc.
      */
     private int basicPatternOffset;
 
     /**
      * The length of this BasicPattern
+     * Dynamic length based on the number of nodes in the
+     * basic pattern.
      */
     private int basicPatternLength;
 
     /**
      * Number of fields in this BasicPattern
+     * This includes the number of nodes and the
+     * confidence.
      */
     private short fieldCount;
 
     /**
      * field Array of offsets of the fields in data[]
+     * It contains an array of end offsets of nodes and
+     * confidence. It also contains the offset of the metadata
+     * located at position 0 or fieldCount.
      */
     private short[] fieldOffset;
 
@@ -49,7 +58,7 @@ public class BasicPattern implements GlobalConst {
     public BasicPattern() {
         data = new byte[maxSize];
         basicPatternOffset = 0;
-        basicPatternLength = maxSize;
+        basicPatternLength = maxSize; //TODO: Check if you want to set the length here
     }
 
     /**
@@ -178,19 +187,31 @@ public class BasicPattern implements GlobalConst {
         Tuple tuple = new Tuple();
         int lengthOfTuple = fieldCount;
 
-        AttrType[] attrTypes = new AttrType[(lengthOfTuple - 1) * 2 + 1];
+        /* Create attrTypes for nodes and confidence.
+            The number of attrTypes being created is equal to
+            number of nodes * 2 (because every node has to
+            store page ID and offset) and one attrType for
+            confidence.
+         */
+        int numberOfNodes = (lengthOfTuple - 1);
+        int numOfAttrTypesForNodes = numberOfNodes * 2;
+
+        AttrType[] attrTypes = new AttrType[numOfAttrTypesForNodes + 1];
         int j = 0;
 
-        for (j = 0; j < (lengthOfTuple - 1) * 2; j++) {
+        //[integer attributes for nodes, double for confidence]
+        for (j = 0; j < numOfAttrTypesForNodes; j++) {
             attrTypes[j] = new AttrType(AttrType.attrInteger);
         }
         attrTypes[j] = new AttrType(AttrType.attrDouble);
         short[] size = new short[1];
 
-        size[0] = (short) ((lengthOfTuple - 1) * 2 * 4 + 1 * 8);
+        int spaceForNodes = numOfAttrTypesForNodes * 4; // integer
+        //TODO - size is supposed to store string size. Is this 0?
+        size[0] = (short) (spaceForNodes + (1 * 8));
 
         try {
-            tuple.setHdr((short) ((lengthOfTuple - 1) * 2 + 1), attrTypes, size);
+            tuple.setHdr((short) (numOfAttrTypesForNodes + 1), attrTypes, size);
         } catch (InvalidTypeException invalidTypeException) {
             invalidTypeException.printStackTrace();
         } catch (InvalidTupleSizeException invalidTupleSizeException) {
@@ -202,9 +223,12 @@ public class BasicPattern implements GlobalConst {
         int i = 0;
         j = 1;
 
-        for (i = 0; i < fieldCount - 1; i++) {
+        // Number of nodes is fieldCount - 1
+        // 0 index iteration of number of nodes
+
+        for (i = 1; i <= fieldCount - 1; i++) {
             try {
-                EID eid = getEIDFieldFromBP(i + 1);
+                EID eid = getEIDFieldFromBP(i);
                 tuple.setIntFld(j++, eid.getSlotNo());
                 tuple.setIntFld(j++, eid.getPageNo().pid);
             } catch (FieldNumberOutOfBoundException e) {
@@ -290,6 +314,7 @@ public class BasicPattern implements GlobalConst {
 
     /**
      * To Convert pageNo and slotNo field into EID and return it
+     *
      *
      * @param fieldNo the field number
      * @return the converted eid
@@ -458,7 +483,7 @@ public class BasicPattern implements GlobalConst {
         try {
             for (int i = 1; i <= fieldCount - 1; i++) {
                 Label subject = entityHeapFile.getLabel(this.getEIDFieldFromBP(i).returnLID());
-                System.out.printf("%30s  ", subject.getLabel());
+                System.out.printf("%20s  ", subject.getLabel());
             }
             System.out.print(getDoubleField(fieldCount));
             System.out.println("}");
@@ -521,50 +546,6 @@ public class BasicPattern implements GlobalConst {
 
         }
         return found;
-    }
-
-
-    public Tuple getTuplefromBasicPattern() {
-        Tuple tuple1 = new Tuple();
-        int length = (fieldCount);
-        AttrType[] types = new AttrType[(length - 1) * 2 + 1];
-        int j = 0;
-        for (j = 0; j < (length - 1) * 2; j++) {
-            types[j] = new AttrType(AttrType.attrInteger);
-        }
-        types[j] = new AttrType(AttrType.attrDouble);
-        short[] s_sizes = new short[1];
-        s_sizes[0] = (short) ((length - 1) * 2 * 4 + 1 * 8);
-        try {
-            tuple1.setHdr((short) ((length - 1) * 2 + 1), types, s_sizes);
-        } catch (InvalidTypeException e1) {
-            e1.printStackTrace();
-        } catch (InvalidTupleSizeException e1) {
-            e1.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int i = 0;
-        j = 1;
-        for (i = 0; i < fieldCount - 1; i++) {
-            try {
-                EID eid = getEIDFld(i + 1);
-                tuple1.setIntFld(j++, eid.getSlotNo());
-                tuple1.setIntFld(j++, eid.getPageNo().pid);
-            } catch (FieldNumberOutOfBoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            tuple1.setDoubleFld(j, getDoubleFld(fieldCount));
-        } catch (FieldNumberOutOfBoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return tuple1;
     }
 
     public BasicPattern(Tuple tuple) {

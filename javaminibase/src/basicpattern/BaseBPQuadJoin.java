@@ -4,6 +4,7 @@ import diskmgr.rdf.IStream;
 import global.EID;
 import heap.FieldNumberOutOfBoundException;
 import heap.Quadruple;
+import iterator.QuadrupleUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import bpiterator.BPIterator;
@@ -72,6 +73,7 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
 
     try {
       stream = getStream();
+      outerTuple = left_iter.get_next();
     } catch (Exception e) {
       System.err.println("Error while opening a stream");
       e.printStackTrace();
@@ -90,7 +92,7 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       return null;
     }
 
-    if ((outerTuple = left_iter.get_next()) == null) {
+    if (outerTuple  == null) {
       //EOF reached for outer file
       isLeftEOF = true;
       if (stream != null) {
@@ -100,7 +102,10 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       return null;
     }
 
+
     Quadruple quad = stream.getNext();
+
+
     while (quad != null) {
       BasicPattern matchedPattern = joinProject(quad);
       if (matchedPattern == null) {
@@ -143,8 +148,8 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
    * @throws Exception
    */
   private BasicPattern joinProject(Quadruple quad) throws Exception {
-
-    EID eidOuter = outerTuple.getEIDFld(BPJoinNodePosition);
+    EID eidOuter = outerTuple.getEIDFld(BPJoinNodePosition + 1);
+    String eidOuterLabel = QuadrupleUtils.entityHeapFile.getLabel(eidOuter.returnLID()).getLabel();
     EID eidInner;
 
     if (JoinOnSubjectorObject == 0)
@@ -153,6 +158,7 @@ public abstract class BaseBPQuadJoin implements IBPQuadJoin{
       eidInner = (EID) quad.getObjectID();
 
     if (eidOuter.equals(eidInner)) {
+//      quad.print();
       BasicPattern bp = new BasicPattern();
 
       boolean isJoinNodeProjected = false;
