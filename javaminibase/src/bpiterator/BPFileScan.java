@@ -67,8 +67,13 @@ public class BPFileScan extends  BPIterator
 			 }
 		 }
 
-  
-  /**
+
+	@Override
+	protected int generate_runs(int max_elems, AttrType sortFldType) throws Exception {
+		return 0;
+	}
+
+	/**
    *@return the result tuple
    *@exception JoinsException some join exception
    *@exception IOException I/O errors
