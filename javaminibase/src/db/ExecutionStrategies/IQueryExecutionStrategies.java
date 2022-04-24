@@ -1,10 +1,8 @@
 package db.ExecutionStrategies;
 
+import db.InnerJoinOption;
+
 public interface IQueryExecutionStrategies {
 
-  public void executeHeapfileHeapfileStrategy() throws Exception;
-  public void executeHeapfileIndexStrategy();
-  public void executeIndexIndexStrategy();
-  public void executeIndexHeapfileStrategy();
-
+  void execute(InnerJoinOption queryJoin1, InnerJoinOption queryJoin2) throws Exception;
 }

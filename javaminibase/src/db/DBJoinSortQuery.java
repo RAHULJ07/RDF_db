@@ -64,10 +64,34 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
         try {
             IQueryExecutionStrategies iQueryExecutionStrategies = new QueryExecutionStrategies(query, numBuf);
-            iQueryExecutionStrategies.executeHeapfileHeapfileStrategy();
-            iQueryExecutionStrategies.executeIndexHeapfileStrategy();
-            iQueryExecutionStrategies.executeHeapfileIndexStrategy();
-            iQueryExecutionStrategies.executeIndexIndexStrategy();
+            //Strategy 1
+            try{
+                iQueryExecutionStrategies.execute(InnerJoinOption.HeapScan, InnerJoinOption.HeapScan);
+            }catch(Exception e){
+                System.out.println("Exception in Strategy 1");
+                e.printStackTrace();
+            }
+            //Strategy 2
+            try {
+                iQueryExecutionStrategies.execute(InnerJoinOption.HeapScan, InnerJoinOption.IndexScan);
+            }catch(Exception e){
+                System.out.println("Exception in Strategy 2");
+                e.printStackTrace();
+            }
+            //Strategy 3
+            try{
+                iQueryExecutionStrategies.execute(InnerJoinOption.IndexScan, InnerJoinOption.HeapScan);
+            }catch(Exception e){
+                System.out.println("Exception in Strategy 3");
+                e.printStackTrace();
+            }
+            //Strategy 4
+            try{
+                iQueryExecutionStrategies.execute(InnerJoinOption.IndexScan, InnerJoinOption.IndexScan);
+            }catch(Exception e){
+                System.out.println("Exception in Strategy 4");
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
