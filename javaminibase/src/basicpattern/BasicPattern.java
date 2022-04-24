@@ -483,7 +483,7 @@ public class BasicPattern implements GlobalConst {
         try {
             for (int i = 1; i <= fieldCount - 1; i++) {
                 Label subject = entityHeapFile.getLabel(this.getEIDFieldFromBP(i).returnLID());
-                System.out.printf("%30s  ", subject.getLabel());
+                System.out.printf("%20s  ", subject.getLabel());
             }
             System.out.print(getDoubleField(fieldCount));
             System.out.println("}");
