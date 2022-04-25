@@ -1,6 +1,6 @@
 package db;
 
-public enum InnerJoinOption {
+public enum JoinOption {
   IndexScan,
   HeapScan
 }

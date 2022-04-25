@@ -1,8 +1,8 @@
 package db.ExecutionStrategies;
 
-import db.InnerJoinOption;
+import db.JoinOption;
 
 public interface IQueryExecutionStrategies {
 
-  void execute(InnerJoinOption queryJoin1, InnerJoinOption queryJoin2) throws Exception;
+  void execute(JoinOption queryJoin1, JoinOption queryJoin2) throws Exception;
 }

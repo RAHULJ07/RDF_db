@@ -489,39 +489,6 @@ public class BufMgr implements GlobalConst {
         }
     }
 
-    private void forceFlushPages() throws BufMgrException, PageNotFoundException, HashOperationException {
-        for (int i = 0; i < numBuffers; i++)   // write all valid dirty pages to disk
-        {
-
-            if (frmeTable[i].pin_count() != 0) {
-                frmeTable[i].pin_cnt = 1; //Todo: Check if we assigned value is correct and why
-            }
-
-            if (frmeTable[i].dirty != false) {
-
-                if (frmeTable[i].pageNo.pid == INVALID_PAGE) {
-                    throw new PageNotFoundException(null, "BUFMGR: INVALID_PAGE_NO");
-                }
-
-                PageId pageid = new PageId();
-                pageid.pid = frmeTable[i].pageNo.pid;
-
-                Page apage = new Page(bufPool[i]);
-
-                write_page(pageid, apage);
-
-                try {
-                    hashTable.remove(pageid);
-                } catch (Exception e2) {
-                    throw new HashOperationException(e2, "BUFMGR: HASH_TBL_ERROR.");
-                }
-
-                frmeTable[i].pageNo.pid = INVALID_PAGE; // frame is empty
-                frmeTable[i].dirty = false;
-            }
-        }
-    }
-
     // Debug use only
     private void bmhashdisplay() {
         hashTable.display();
@@ -837,10 +804,6 @@ public class BufMgr implements GlobalConst {
             IOException {
         PageId pageId = new PageId(INVALID_PAGE);
         privFlushPages(pageId, 1);
-    }
-
-    public void forceFlushAllPages() throws PageNotFoundException, HashOperationException, BufMgrException {
-      forceFlushPages();
     }
 
     /**

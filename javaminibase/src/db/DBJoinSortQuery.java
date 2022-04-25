@@ -1,20 +1,5 @@
 package db;
-
-import basicpattern.BPQuadHeapJoin;
-import basicpattern.BPQuadIndexJoin;
-import basicpattern.BasicPattern;
-import bpiterator.BPFileScan;
-import bpiterator.BPSort;
-import db.ExecutionStrategies.IQueryExecutionStrategies;
 import db.ExecutionStrategies.QueryExecutionStrategies;
-import diskmgr.rdf.RdfDB;
-import diskmgr.rdf.TStream;
-import global.BPOrder;
-import global.QuadOrder;
-import global.RDFSystemDefs;
-import global.SystemDefs;
-import heap.Heapfile;
-import heap.Tuple;
 
 public class DBJoinSortQuery extends BaseQuery implements IQuery {
 
@@ -56,45 +41,26 @@ public class DBJoinSortQuery extends BaseQuery implements IQuery {
         this.indexOption = IndexOption.valueOf(indexOption);
     }
 
-    @Override
-    public void execute() throws Exception {
+    public void execute(int strategy) throws Exception {
         JoinSortQueryFileReader fileReader = new JoinSortQueryFileReader(queryFile);
         JoinSortQuery query = fileReader.getQuery();
 
-
         try {
-            IQueryExecutionStrategies iQueryExecutionStrategies = new QueryExecutionStrategies(query, numBuf);
-            //Strategy 1
-            try{
-                iQueryExecutionStrategies.execute(InnerJoinOption.HeapScan, InnerJoinOption.HeapScan);
-            }catch(Exception e){
-                System.out.println("Exception in Strategy 1");
-                e.printStackTrace();
-            }
-            //Strategy 2
+            QueryExecutionStrategies queryExecutionStrategies = new QueryExecutionStrategies(query, numBuf, strategy);
             try {
-                iQueryExecutionStrategies.execute(InnerJoinOption.HeapScan, InnerJoinOption.IndexScan);
+                queryExecutionStrategies.execute();
             }catch(Exception e){
-                System.out.println("Exception in Strategy 2");
-                e.printStackTrace();
-            }
-            //Strategy 3
-            try{
-                iQueryExecutionStrategies.execute(InnerJoinOption.IndexScan, InnerJoinOption.HeapScan);
-            }catch(Exception e){
-                System.out.println("Exception in Strategy 3");
-                e.printStackTrace();
-            }
-            //Strategy 4
-            try{
-                iQueryExecutionStrategies.execute(InnerJoinOption.IndexScan, InnerJoinOption.IndexScan);
-            }catch(Exception e){
-                System.out.println("Exception in Strategy 4");
+                System.out.println("Exception in Strategy " + strategy);
                 e.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    public void execute() throws Exception {
 
     }
 }

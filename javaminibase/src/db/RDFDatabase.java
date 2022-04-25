@@ -70,10 +70,11 @@ public class RDFDatabase {
    * Executes the join sort query on the database.
    *
    * @param query
+   * @param strategy
    * @throws Exception
    */
-  public void joinSort(DBJoinSortQuery query) throws Exception{
-    query.execute();
+  public void joinSort(DBJoinSortQuery query, int strategy) throws Exception{
+    query.execute(strategy);
   }
 
   /**
