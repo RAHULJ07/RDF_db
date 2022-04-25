@@ -213,7 +213,7 @@ public class QueryExecutionStrategies implements IQueryExecutionStrategies{
       executeSort();
 
       Telemetry.endOperation("Sort");
-      Telemetry.prinTelemetry();
+      Telemetry.printTelemetry();
 
   }
 
