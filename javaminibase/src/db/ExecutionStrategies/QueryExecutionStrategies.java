@@ -171,7 +171,7 @@ public class QueryExecutionStrategies implements IQueryExecutionStrategies{
         joinHeapFile2.deleteFile();
 
         System.out.println("Results after strategy execution");
-        Telemetry.prinTelemetry();
+        Telemetry.printTelemetry();
         Telemetry.initialize();
         heapfile.deleteFile();
         RDFSystemDefs.forceFlushBuffer();
