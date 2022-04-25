@@ -25,7 +25,19 @@ public class Query {
     }
     DBJoinSortQuery query = (DBJoinSortQuery) QueryFactory.getQuery(QueryType.JOIN_SORT, String.join(" ", args));
     RDFDatabase db = new RDFDatabase(query.getDbName(), query.getIndexOption());
-    db.joinSort(query);
+    db.joinSort(query, 1);
+    db.close();
+
+    db = new RDFDatabase(query.getDbName(), query.getIndexOption());
+    db.joinSort(query, 2);
+    db.close();
+
+    db = new RDFDatabase(query.getDbName(), query.getIndexOption());
+    db.joinSort(query, 3);
+    db.close();
+
+    db = new RDFDatabase(query.getDbName(), query.getIndexOption());
+    db.joinSort(query, 4);
     db.close();
   }
 }

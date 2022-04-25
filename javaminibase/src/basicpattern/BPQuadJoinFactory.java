@@ -1,12 +1,12 @@
 package basicpattern;
 
 import bpiterator.BPIterator;
-import db.InnerJoinOption;
+import db.JoinOption;
 
 public class BPQuadJoinFactory {
 
 
-  public static IBPQuadJoin createBPQuadJoin(InnerJoinOption innerJoinOption
+  public static IBPQuadJoin createBPQuadJoin(JoinOption joinOption
       ,int amt_of_mem,
       int num_left_nodes,
       BPIterator left_iter,
@@ -22,7 +22,7 @@ public class BPQuadJoinFactory {
       throws Exception {
 
     IBPQuadJoin bpQuadJoin = null;
-    switch (innerJoinOption) {
+    switch (joinOption) {
       case IndexScan: {
         bpQuadJoin = new BPQuadIndexJoin(amt_of_mem, num_left_nodes, left_iter, BPJoinNodePosition
             , JoinOnSubjectorObject, RightSubjectFilter, RightPredicateFilter, RightObjectFilter
