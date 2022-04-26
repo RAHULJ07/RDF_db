@@ -79,7 +79,7 @@ public class JoinSortQueryFileParser {
     if(tokens[2].equals("*")) {
       rightSubjectFilter2 = null;
     } else {
-      rightSubjectFilter2 = tokens[2].replaceFirst("^:", "").replaceAll("\"", "");
+      rightSubjectFilter2 = tokens[2].replaceAll("\"", "").replaceFirst("^:", "");
     }
 
     if(tokens[3].equals("*")) {

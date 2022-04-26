@@ -64,47 +64,65 @@ public class QueryExecutionStrategies implements IQueryExecutionStrategies{
   }
 
   public void executeInnerJoin(JoinOption queryJoin1) throws Exception {
-    Telemetry.startOperation("initHeapFile");
-    Heapfile initialBasicPatternsHeapFile = initHeapFile(true);
-    Telemetry.endOperation("initHeapFile");
-    if (initialBasicPatternsHeapFile.getRecCnt() > 0) {
-      Telemetry.startOperation("Join1");
-      //Start First Join
-      Heapfile innerJoinResultsHeapFile = new Heapfile("JOIN_HEAP_FILE1");
-      BPFileScan initialBasicPatternsFileScan = new BPFileScan("BP_HEAP", 3);
-      BasicPattern basicPattern = null;
+    Heapfile initialBasicPatternsHeapFile = new Heapfile("BP_HEAP");
+    // if there were any basic patterns retrieved
 
-      IBPQuadJoin innerJoin = BPQuadJoinFactory.createBPQuadJoin(queryJoin1,
-          numBuf, 3, initialBasicPatternsFileScan,
-          query.getBpJoinNodePosition1(),
-          query.getJoinOnSubjectOrObject1(), query.getRightSubjectFilter1(),
-          query.getRightPredicateFilter1(), query.getRightObjectFilter1(),
-          query.getRightConfidenceFilter1(), query.getLeftOutNodePositions1(),
-          query.getOutputRightSubject1(), query.getOutputRightObject1());
+      Heapfile innerJoinResultsHeapFile;
+      IBPQuadJoin innerJoin = null;
+      BPFileScan initialBasicPatternsFileScan = null;
 
-      basicPattern = innerJoin.get_next();
+      try {
+        innerJoinResultsHeapFile = new Heapfile("JOIN_HEAP_FILE1");
+        initialBasicPatternsFileScan = new BPFileScan("BP_HEAP", 3);
+        BasicPattern basicPattern = null;
 
-      System.out.println("Printing results after first join");
-      while (basicPattern != null) {
-        basicPattern.printBasicPattern();
-        this.basicPatternFieldCount = basicPattern.numberOfFields();
-        innerJoinResultsHeapFile.insertRecord(basicPattern.getTupleFromBasicPattern().getTupleByteArray());
+        innerJoin = BPQuadJoinFactory.createBPQuadJoin(queryJoin1,
+            numBuf, 3, initialBasicPatternsFileScan,
+            query.getBpJoinNodePosition1(),
+            query.getJoinOnSubjectOrObject1(), query.getRightSubjectFilter1(),
+            query.getRightPredicateFilter1(), query.getRightObjectFilter1(),
+            query.getRightConfidenceFilter1(), query.getLeftOutNodePositions1(),
+            query.getOutputRightSubject1(), query.getOutputRightObject1());
+
         basicPattern = innerJoin.get_next();
-      }
-      innerJoin.close();
-      initialBasicPatternsFileScan.close();
-      initialBasicPatternsHeapFile.deleteFile();
-      Telemetry.endOperation("Join1");
-    }
-  }
 
+        System.out.println("Printing results after first join");
+        while (basicPattern != null) {
+          basicPattern.printBasicPattern();
+          this.basicPatternFieldCount = basicPattern.numberOfFields();
+          innerJoinResultsHeapFile.insertRecord(basicPattern.getTupleFromBasicPattern().getTupleByteArray());
+          basicPattern = innerJoin.get_next();
+        }
+
+      } catch(Exception e) {
+        System.out.println("Error in inner join.");
+        throw e;
+      } finally {
+         if(innerJoin != null) {
+           innerJoin.close();
+         }
+         if(initialBasicPatternsFileScan != null) {
+           initialBasicPatternsFileScan.close();
+         }
+         if(initialBasicPatternsHeapFile != null) {
+           initialBasicPatternsHeapFile.deleteFile();
+         }
+      }
+  }
 
   public void executeOuterJoin(JoinOption queryJoin2)
       throws Exception {
-      Heapfile outerJoinResultsHeapFile = new Heapfile("JOIN_HEAP_FILE2");
-      BPFileScan join1BasicPatternsFileScan = new BPFileScan("JOIN_HEAP_FILE1", basicPatternFieldCount);
+    Heapfile innerJoinResultsHeapFile = null;
+    IBPQuadJoin outerJoin = null;
+    BPFileScan join1BasicPatternsFileScan = null;
+    Heapfile outerJoinResultsHeapFile = null;
+    try {
+      innerJoinResultsHeapFile = new Heapfile("JOIN_HEAP_FILE1");
+      outerJoinResultsHeapFile = new Heapfile("JOIN_HEAP_FILE2");
+
       if (basicPatternFieldCount > 0) {
-        IBPQuadJoin outerJoin = BPQuadJoinFactory.createBPQuadJoin(queryJoin2,
+        join1BasicPatternsFileScan = new BPFileScan("JOIN_HEAP_FILE1", basicPatternFieldCount);
+        outerJoin = BPQuadJoinFactory.createBPQuadJoin(queryJoin2,
             numBuf, basicPatternFieldCount, join1BasicPatternsFileScan,
             query.getBpJoinNodePosition2(),
             query.getJoinOnSubjectOrObject2(), query.getRightSubjectFilter2(),
@@ -123,41 +141,69 @@ public class QueryExecutionStrategies implements IQueryExecutionStrategies{
           outerJoinResultsHeapFile.insertRecord(basicPattern1.getTupleFromBasicPattern().getTupleByteArray());
           basicPattern1 = outerJoin.get_next();
         }
+      }
+
+    } catch(Exception e) {
+      System.out.println("Error in outer join.");
+      throw e;
+    } finally {
+      if(outerJoin != null) {
         outerJoin.close();
       }
-      join1BasicPatternsFileScan.close();
+      if(join1BasicPatternsFileScan != null) {
+        join1BasicPatternsFileScan.close();
+      }
+      if(innerJoinResultsHeapFile != null) {
+        innerJoinResultsHeapFile.deleteFile();
+      }
+      if(outerJoinResultsHeapFile != null) {
 
-      Heapfile innerJoinResultsHeapFile = new Heapfile("JOIN_HEAP_FILE1");
-      innerJoinResultsHeapFile.deleteFile();
+      }
+    }
   }
 
   public void executeSort()
       throws Exception {
     BPFileScan outerJoinResultsFileScan = null;
-    Heapfile outerJoinResultsHeapFile = new Heapfile("JOIN_HEAP_FILE2");
+    Heapfile outerJoinResultsHeapFile = null;
     BasicPattern basicPattern = null;
+    BPSort bpSort = null;
 
-    if (outerJoinResultsHeapFile.getRecCnt() > 0) {
-      outerJoinResultsFileScan = new BPFileScan("JOIN_HEAP_FILE2", basicPatternFieldCount);
-      BPSort bpSort = null;
-      BPOrder bpOrder = query.getSortOrder();
+    try {
 
-      bpSort = new BPSort(outerJoinResultsFileScan, bpOrder, query.getSortNodeIDPos(),
-          query.getNumberOfPages());
+      outerJoinResultsHeapFile = new Heapfile("JOIN_HEAP_FILE2");
 
-      System.out.println("Printing results after sorting");
 
-      while ((basicPattern = bpSort.get_next()) != null) {
-        basicPattern.printBasicPattern();
+      if (outerJoinResultsHeapFile.getRecCnt() > 0) {
+        outerJoinResultsFileScan = new BPFileScan("JOIN_HEAP_FILE2", basicPatternFieldCount);
+
+        BPOrder bpOrder = query.getSortOrder();
+        bpSort = new BPSort(outerJoinResultsFileScan, bpOrder, query.getSortNodeIDPos(),
+            query.getNumberOfPages());
+
+        System.out.println("Printing results after sorting");
+
+        while ((basicPattern = bpSort.get_next()) != null) {
+          basicPattern.printBasicPattern();
+        }
       }
 
-      bpSort.close();
-      outerJoinResultsFileScan.close();
+    } catch(Exception e) {
+        System.out.println("Error in sort");
+        throw e;
+    } finally {
+      if(bpSort != null) {
+        bpSort.close();
+      }
+      if(outerJoinResultsFileScan != null) {
+        outerJoinResultsFileScan.close();
+      }
+      if(outerJoinResultsHeapFile != null) {
+        outerJoinResultsHeapFile.deleteFile();
+      }
     }
 
-    outerJoinResultsHeapFile.deleteFile();
 
-    System.out.println("Results after strategy execution");
   }
 
   private JoinOption getInnerJoinOption() {
@@ -193,28 +239,60 @@ public class QueryExecutionStrategies implements IQueryExecutionStrategies{
    * @throws Exception
    */
   public void execute() throws Exception{
-    JoinOption innerJoinOption = getInnerJoinOption();
-    JoinOption outerJoinOption = getOuterJoinOption();
+    try {
+      JoinOption innerJoinOption = getInnerJoinOption();
+      JoinOption outerJoinOption = getOuterJoinOption();
 
-    Telemetry.initialize();
+      Telemetry.initialize();
 
-    executeInnerJoin(innerJoinOption);
+      Telemetry.startOperation("initHeapFile");
+      initHeapFile(true);
+      Telemetry.endOperation("initHeapFile");
 
-      //end of first join
+      Telemetry.startOperation("Join1");
+      if(canExecuteInnerJoin()) {
+        executeInnerJoin(innerJoinOption);
+      }
 
+      Telemetry.endOperation("Join1");
 
-      //start second join
       Telemetry.startOperation("Join2");
-      executeOuterJoin(outerJoinOption);
-
+      if(canExecuteOuterJoin()) {
+        executeOuterJoin(outerJoinOption);
+      }
       Telemetry.endOperation("Join2");
 
-      Telemetry.startOperation("Sort");
-      executeSort();
 
+      Telemetry.startOperation("Sort");
+      if(canExecuteSort()) {
+        executeSort();
+      }
       Telemetry.endOperation("Sort");
+
       Telemetry.prinTelemetry();
 
+
+
+    } catch(Exception e) {
+      System.out.println("Error executing the query.");
+      throw e;
+    }
+  }
+
+  private boolean canExecuteInnerJoin() throws Exception {
+    Heapfile initialBasicPatternsHeapFile = new Heapfile("BP_HEAP");
+    return initialBasicPatternsHeapFile.getRecCnt() > 0;
+  }
+
+  private boolean canExecuteSort() throws Exception {
+    Heapfile outerJoinResultsHeapFile = new Heapfile("JOIN_HEAP_FILE2");
+    return ((basicPatternFieldCount > 0) && (outerJoinResultsHeapFile.getRecCnt() > 0));
+  }
+
+  private boolean canExecuteOuterJoin()
+      throws Exception {
+    Heapfile innerJoinResultsHeapFile = new Heapfile("JOIN_HEAP_FILE1");
+    return ((basicPatternFieldCount > 0) && (innerJoinResultsHeapFile.getRecCnt() > 0));
   }
 
   @Override
