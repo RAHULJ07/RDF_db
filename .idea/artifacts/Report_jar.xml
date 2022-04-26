@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Report:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Report_jar</output-path>
+    <root id="archive" name="RDBMS2RDF.jar">
+      <element id="module-output" name="RDBMS2RDF" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/Spring 22/CSE 510/json-simple-1.1.1 (1).jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
