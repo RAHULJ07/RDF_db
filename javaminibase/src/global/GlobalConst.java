@@ -84,6 +84,11 @@ public interface GlobalConst {
   public static String JSON_FILE = "telemetry.json";
   public static String READS = "Reads";
   public static String WRITES = "Writes";
+  public static String SUBJECT_COUNT = "Subject Count";
+  public static String OBJECT_COUNT = "Object Count";
+  public static String PREDICATE_COUNT = "Predicate Count";
+  public static String ENTITY_COUNT = "Entity Count";
+  public static String QUAD_COUNT = "Quadruple Count";
 
   /**
    * Global constants for basics
